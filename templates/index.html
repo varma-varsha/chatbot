@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h1>Transform Your Learning Journey</h1>
+    <p class="subtitle">Interactive. Personalized. Effective.</p>
+</section>
+
+<section class="learning-cycle">
+    <a href="{{ url_for('login') }}?next={{ url_for('dashboard') }}" class="cycle-card active" data-step="chat" data-target="/dashboard" style="text-decoration: none; display: block; cursor: pointer;">
+        <div class="icon">
+            <i class="fas fa-comments"></i>
+        </div>
+        <h3>Interactive Chat</h3>
+        <p>Engage with AI tutors 24/7</p>
+    </a>
+
+    <a href="{{ url_for('login') }}?next={{ url_for('progress') }}" class="cycle-card" data-step="progress" data-target="/progress" style="text-decoration: none; display: block; cursor: pointer;">
+        <div class="icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Track Progress</h3>
+        <p>Visual learning analytics</p>
+    </a>
+
+    <a href="{{ url_for('login') }}?next={{ url_for('learning') }}" class="cycle-card" data-step="learn" data-target="/learning" style="text-decoration: none; display: block; cursor: pointer;">
+        <div class="icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3>Adaptive Learning</h3>
+        <p>Personalized to your pace</p>
+    </a>
+
+    <a href="{{ url_for('login') }}?next={{ url_for('review') }}" class="cycle-card" data-step="repeat" data-target="/review" style="text-decoration: none; display: block; cursor: pointer;">
+        <div class="icon">
+            <i class="fas fa-sync-alt"></i>
+        </div>
+        <h3>Smart Review</h3>
+        <p>Reinforce your knowledge</p>
+    </a>
+</section>
+
+<script>
+// Check if user is already logged in and redirect directly to the target page
+document.addEventListener('DOMContentLoaded', function() {
+    const cycleCards = document.querySelectorAll('.cycle-card');
+    
+    cycleCards.forEach(card => {
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            const target = this.getAttribute('data-target');
+            
+            // Check if user is authenticated by trying to fetch dashboard
+            fetch('/dashboard')
+                .then(response => {
+                    if (response.ok) {
+                        // User is authenticated, go directly to target
+                        window.location.href = target;
+                    } else {
+                        // User is not authenticated, go to login with next parameter
+                        window.location.href = this.href;
+                    }
+                })
+                .catch(() => {
+                    // On error, default to login
+                    window.location.href = this.href;
+                });
+        });
+    });
+});
+</script>
+
+<section class="features">
+    <h2>Why Choose OneLearn?</h2>
+    <div class="feature-grid">
+        <div class="feature-item">
+            <i class="fas fa-brain"></i>
+            <h3>AI-Powered Recommendations</h3>
+            <p>Custom learning paths based on your goals</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-puzzle-piece"></i>
+            <h3>Structured Learning</h3>
+            <p>Well-organized modules for optimal progress</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-robot"></i>
+            <h3>24/7 AI Assistant</h3>
+            <p>Get help whenever you need it</p>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <h2>Ready to Transform Your Learning?</h2>
+    <a href="{{ url_for('login') }}"> <button class="btn-primary">Start Learning Now</button></a>
+</section>
+{% endblock %}

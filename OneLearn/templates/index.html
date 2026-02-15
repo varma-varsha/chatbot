@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h1>Transform Your Learning Journey</h1>
+    <p class="subtitle">Interactive. Personalized. Effective.</p>
+</section>
+
+<section class="learning-cycle">
+    <div class="cycle-card active" data-step="chat">
+        <div class="icon">
+            <i class="fas fa-comments"></i>
+        </div>
+        <h3>Interactive Chat</h3>
+        <p>Engage with AI tutors 24/7</p>
+    </div>
+
+    <div class="cycle-card" data-step="progress">
+        <div class="icon">
+            <i class="fas fa-chart-line"></i>
+        </div>
+        <h3>Track Progress</h3>
+        <p>Visual learning analytics</p>
+    </div>
+
+    <div class="cycle-card" data-step="learn">
+        <div class="icon">
+            <i class="fas fa-graduation-cap"></i>
+        </div>
+        <h3>Adaptive Learning</h3>
+        <p>Personalized to your pace</p>
+    </div>
+
+    <div class="cycle-card" data-step="repeat">
+        <div class="icon">
+            <i class="fas fa-sync-alt"></i>
+        </div>
+        <h3>Smart Review</h3>
+        <p>Reinforce your knowledge</p>
+    </div>
+</section>
+
+<section class="features">
+    <h2>Why Choose OneLearn?</h2>
+    <div class="feature-grid">
+        <div class="feature-item">
+            <i class="fas fa-brain"></i>
+            <h3>AI-Powered Recommendations</h3>
+            <p>Custom learning paths based on your goals</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-puzzle-piece"></i>
+            <h3>Structured Learning</h3>
+            <p>Well-organized modules for optimal progress</p>
+        </div>
+        <div class="feature-item">
+            <i class="fas fa-robot"></i>
+            <h3>24/7 AI Assistant</h3>
+            <p>Get help whenever you need it</p>
+        </div>
+    </div>
+</section>
+
+<section class="cta">
+    <h2>Ready to Transform Your Learning?</h2>
+    <a href="{{ url_for('login') }}"> <button class="btn-primary">Start Learning Now</button></a>
+</section>
+{% endblock %}

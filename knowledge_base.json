@@ -1,0 +1,335 @@
+{
+    "bot_info": [
+        {
+            "question": "Hi",
+            "response": "Hello! How can I help you?"
+        },
+        {
+            "question": "Hy",
+            "response": "Hey there! How's it going?"
+        },
+        {
+            "question": "Hello",
+            "response": "Hi there! What can I do for you?"
+        },
+        {
+            "question": "Who are you?",
+            "response": "I'm a friendly OneLearn AI here to assist you."
+        },
+        {
+            "question": "What can you do?",
+            "response": "I can answer questions, help with coding basics, and more."
+        },
+        {
+            "question": "How are you?",
+            "response": "I'm just a program, but thanks for asking!"
+        },
+        {
+            "question": "What’s your name?",
+            "response": "You can call me your OneLearn AI."
+        },
+        {
+            "question": "Are you human?",
+            "response": "No, I’m an AI chatbot designed to assist you."
+        },
+        {
+            "question": "Can you learn?",
+            "response": "No, I'm a rule-based chatbot with predefined responses."
+        },
+        {
+            "question": "Can you think?",
+            "response": "I process inputs and provide relevant responses, but I don't think like humans."
+        },
+        {
+            "question": "What is AI?",
+            "response": "AI stands for Artificial Intelligence, enabling machines to simulate human intelligence."
+        },
+        {
+            "question": "Are you always available?",
+            "response": "Yes, I'm here 24/7 to assist you."
+        },
+        {
+            "question": "Tell me a joke",
+            "response": "Why did the computer go to art school? To learn how to draw its own conclusions!"
+        },
+        {
+            "question": "What is your purpose?",
+            "response": "My purpose is to assist with your queries and tasks."
+        },
+        {
+            "question": "Can you speak other languages?",
+            "response": "Yes, I can assist in multiple languages, but mostly English."
+        },
+        {
+            "question": "Can you make decisions?",
+            "response": "No, I follow rules and respond based on my programming."
+        },
+        {
+            "question": "What is programming?",
+            "response": "Programming is the process of creating instructions for computers using code."
+        },
+        {
+            "question": "How does a computer work?",
+            "response": "Computers process data using hardware and software based on user inputs."
+        },
+        {
+            "question": "Can you help with Python?",
+            "response": "Yes, I can provide Python examples and guidance."
+        },
+        {
+            "question": "What is Flask?",
+            "response": "Flask is a Python web framework for building web applications."
+        },
+        {
+            "question": "What is JavaScript?",
+            "response": "JavaScript is a programming language used to make web pages interactive."
+        },
+        {
+            "question": "What is HTML?",
+            "response": "HTML is the language used to structure web pages."
+        },
+        {
+            "question": "Can you code?",
+            "response": "Yes, I can provide examples and snippets in various programming languages."
+        },
+        {
+            "question": "What is debugging?",
+            "response": "Debugging is the process of finding and fixing errors in code."
+        },
+        {
+            "question": "What’s an algorithm?",
+            "response": "An algorithm is a step-by-step process to solve a problem or complete a task."
+        },
+        {
+            "question": "What is AI used for?",
+            "response": "AI is used in tasks like automation, recommendation systems, and virtual assistants."
+        },
+        {
+            "question": "How do computers store data?",
+            "response": "Computers use memory like RAM and storage devices like hard drives."
+        },
+        {
+            "question": "How do websites work?",
+            "response": "Websites use code like HTML, CSS, and JavaScript hosted on servers."
+        },
+        {
+            "question": "What is a server?",
+            "response": "A server is a computer that provides data or services to other computers."
+        },
+        {
+            "question": "Can you learn Python?",
+            "response": "I can't learn, but I can help you learn Python!"
+        },
+        {
+            "question": "Do you know machine learning?",
+            "response": "I can explain machine learning concepts and provide examples."
+        },
+        {
+            "question": "What is SQL?",
+            "response": "SQL is a language for managing and querying databases."
+        },
+        {
+            "question": "What is data science?",
+            "response": "Data science involves analyzing data to extract meaningful insights."
+        },
+        {
+            "question": "What is a chatbot?",
+            "response": "A chatbot is a program designed to simulate conversation with users."
+        },
+        {
+            "question": "Can you calculate?",
+            "response": "Yes, I can do basic calculations. Try me!"
+        },
+        {
+            "question": "What is 2+2?",
+            "response": "2+2 equals 4."
+        },
+        {
+            "question": "What is your favorite language?",
+            "response": "I don’t have preferences, but Python is powerful and popular."
+        },
+        {
+            "question": "How can I learn coding?",
+            "response": "Start with beginner tutorials and practice regularly."
+        },
+        {
+            "question": "What is the best programming language?",
+            "response": "It depends on your goals! Python is great for beginners."
+        },
+        {
+            "question": "What is AI in gaming?",
+            "response": "AI in gaming enhances NPC behavior and user experiences."
+        },
+        {
+            "question": "What is a loop in programming?",
+            "response": "A loop repeats a block of code until a condition is met."
+        },
+        {
+            "question": "Can you explain recursion?",
+            "response": "ecursion is when a function calls itself to solve a problem."
+        },
+        {
+            "question": "What is the cloud?",
+            "response": "The cloud refers to online storage and computing services."
+        },
+        {
+            "question": "Do you have feelings?",
+            "response": "No, I don’t have feelings—I’m just software."
+        },
+        {
+            "question": "Can you play music?",
+            "response": "No, but I can guide you to music apps or websites."
+        },
+        {
+            "question": "What is your favorite color?",
+            "response": "I don't have favorites, but I like seeing things in clear syntax!"
+        },
+        {
+            "question": "What is binary?",
+            "response": "Binary is the language of computers, consisting of 0s and 1s."
+        },
+        {
+            "question": "What’s a computer virus?",
+            "response": "A computer virus is malicious software that harms devices."
+        },
+        {
+            "question": "What is a database?",
+            "response": "A database is a structured way to store and manage data."
+        },
+        {
+            "question": "What is JSON?",
+            "response": "JSON is a lightweight data format used for exchanging data between systems."
+        },
+        {
+            "question": "Can you tell a fact?",
+            "response": "Sure! The first computer weighed over 27 tons."
+        },
+        {
+            "question": "What’s the internet?",
+            "response": "The internet is a global network connecting devices for communication."
+        },
+        {
+            "question": "Can you solve math problems?",
+            "response": "Yes, just ask me a math question!"
+        },
+        {
+            "question": "What’s 10 times 10?",
+            "response": "10 times 10 equals 100."
+        },
+        {
+            "question": "Are you alive?",
+            "response": "No, I’m a digital assistant."
+        },
+        {
+            "question": "What’s machine learning?",
+            "response": "Machine learning is when computers learn patterns from data."
+        },
+        {
+            "question": "Can you work offline?",
+            "response": "No, I need an internet connection to function."
+        },
+        {
+            "question": "What is encryption?",
+            "response": "Encryption secures data by converting it into unreadable code."
+        },
+        {
+            "question": "What’s Python used for?",
+            "response": "Python is used for web development, data analysis, and more."
+        },
+        {
+            "question": "Can you search the web?",
+            "response": "No, but I can answer based on my pre-programmed knowledge."
+        },
+        {
+            "question": "How do you work?",
+            "response": "I process inputs and match them to the best responses."
+        },
+        {
+            "question": "How is AI built?",
+            "response": "AI is built using algorithms, data, and computing power."
+        },
+        {
+            "question": "What’s a neural network?",
+            "response": "Neural networks are AI models inspired by the human brain."
+        },
+        {
+            "question": "Can you be hacked?",
+            "response": "I’m a secure program, but nothing is entirely hack-proof."
+        },
+        {
+            "question": "What’s your favorite food?",
+            "response": "I don’t eat, but I appreciate clean, efficient code."
+        },
+        {
+            "question": "Are you helpful?",
+            "response": "I strive to be as helpful as I can!"
+        },
+        {
+            "question": "Can you tell the time?",
+            "response": "No, but your device can!"
+        },
+        {
+            "question": "What’s an IP address?",
+            "response": "An IP address is a unique identifier for devices on a network."
+        },
+        {
+            "question": "What is GitHub?",
+            "response": "GitHub is a platform for code collaboration and sharing."
+        },
+        {
+            "question": "What’s your job?",
+            "response": "My job is to assist with your queries."
+        },
+        {
+            "question": "Can you explain loops?",
+            "response": "Sure! Loops repeat actions based on conditions."
+        },
+        {
+            "question": "What is recursion?",
+            "response": "ecursion is a function that calls itself."
+        },
+        {
+            "question": "What’s open-source software?",
+            "response": "Open-source software is code that’s freely available to use and modify."
+        },
+        {
+            "question": "What’s cybersecurity?",
+            "response": "Cybersecurity protects systems from digital attacks."
+        },
+        {
+            "question": "What is a framework?",
+            "response": "A framework provides tools to simplify application development."
+        },
+        {
+            "question": "Can you learn new things?",
+            "response": "No, I can’t learn—I follow predefined rules."
+        }
+    ],
+    "programming_languages": [
+        {
+            "language": "Python",
+            "description": "Python is a high-level, interpreted programming language known for its simplicity and readability.",
+            "sample_code": "def hello_world():\n    print('Hello, World!')\n\nhello_world()"
+        },
+        {
+            "language": "C++",
+            "description": "C++ is a powerful, high-performance programming language used for system/software development.",
+            "sample_code": "#include <iostream>\n\nint main() {\n    std::cout << \"Hello, World!\" << std::endl;\n    return 0;\n}"
+        },
+        {
+            "language": "Rust",
+            "description": "Rust is a systems programming language focused on safety, concurrency, and performance.",
+            "sample_code": "fn main() {\n    println!(\"Hello, World!\");\n}"
+        },
+        {
+            "language": "PHP",
+            "description": "PHP is a server-side scripting language designed for web development.",
+            "sample_code": "<?php\n    echo \"Hello, World!\";\n?>"
+        },
+        {
+            "language": "JavaScript",
+            "description": "JavaScript is a versatile programming language primarily used for web development.",
+            "sample_code": "function helloWorld() {\n    console.log('Hello, World!');\n}\n\nhelloWorld();"
+        }
+    ]
+}

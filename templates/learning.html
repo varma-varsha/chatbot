@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Modal Popup -->
+<div id="course-popup" class="popup-container" style="display: none;">
+    <div class="popup-content">
+        <div class="popup-header">
+            <h3>Course Details</h3>
+            <button onclick="closePopup()" class="close-btn">X</button>
+        </div>
+
+        <div class="course-info">
+            <h2>Complete Python Masterclass</h2>
+            <p>Master Python programming from basics to advanced concepts. Learn through practical examples and real-world projects. This comprehensive course covers everything you need to become a proficient Python developer.</p>
+        </div>
+
+        <div id="course-details" class="popup-body">
+            <div class="chapter-accordion">
+                <!-- Chapters will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div class="popup-footer">
+            <button onclick="downloadCoursePDF()" class="download-btn">
+                Download Course Material
+            </button>
+            <button onclick="closePopup()" class="close-btn">Close</button>
+        </div>
+    </div>
+</div>
+
+<div class="container" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
+    <div class="header-section" style="margin-bottom: 40px; text-align: center;">
+        <h1 style="font-size: 3rem; color: #2c3e50; margin-bottom: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Adaptive Learning</h1>
+        <p style="font-size: 1.3rem; color: #7f8c8d;">Personalized learning paths tailored to your pace</p>
+    </div>
+
+    <div class="intro-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; color: white; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);">
+        <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
+            <div style="font-size: 5rem; flex-shrink: 0;">🎓</div>
+            <div style="flex: 1;">
+                <h2 style="margin: 0 0 15px 0; font-size: 2rem; color: white;">Smart Learning Paths</h2>
+                <p style="margin: 0; font-size: 1.1rem; line-height: 1.6; opacity: 0.95; color: white;">
+                    Our AI analyzes your learning style and progress to recommend the perfect courses for you. 
+                    Start from the basics or jump to advanced topics - we adapt to your pace.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="color: #2c3e50; margin-bottom: 30px; font-size: 2rem;">Available Courses</h2>
+    
+    <div id="courses-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px;">
+        <!-- Courses will be dynamically inserted here -->
+    </div>
+
+    <div class="features-section" style="background: #f8f9fa; padding: 40px; border-radius: 20px; margin-top: 40px;">
+        <h2 style="color: #2c3e50; margin-bottom: 30px; text-align: center;">Why Adaptive Learning Works</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">🎯</div>
+                <h3 style="color: #667eea; margin-bottom: 10px;">Goal-Oriented</h3>
+                <p style="color: #7f8c8d;">Learn at your own pace with personalized recommendations</p>
+            </div>
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">📊</div>
+                <h3 style="color: #667eea; margin-bottom: 10px;">Progress Tracking</h3>
+                <p style="color: #7f8c8d;">Monitor your advancement with real-time analytics</p>
+            </div>
+            <div style="text-align: center; padding: 20px;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">🚀</div>
+                <h3 style="color: #667eea; margin-bottom: 10px;">Flexible Learning</h3>
+                <p style="color: #7f8c8d;">Switch between courses and topics as needed</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="action-buttons" style="margin-top: 40px; text-align: center;">
+        <a href="{{ url_for('dashboard') }}" style="display: inline-block; padding: 15px 40px; background: #667eea; color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; margin: 0 10px; transition: transform 0.3s;">
+            ← Back to Dashboard
+        </a>
+    </div>
+</div>
+
+<script>
+// Load available courses
+async function loadCourses() {
+    try {
+        const response = await fetch('/get_available_languages');
+        const data = await response.json();
+        const courses = data.languages || [];
+        
+        const coursesGrid = document.getElementById('courses-grid');
+        
+        if (courses.length === 0) {
+            coursesGrid.innerHTML = `
+                <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #7f8c8d;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">📚</div>
+                    <h3 style="margin-bottom: 10px;">No courses available</h3>
+                    <p>Courses are being added soon!</p>
+                </div>
+            `;
+            return;
+        }
+        
+        coursesGrid.innerHTML = courses.map(lang => `
+            <div style="background: white; border: 2px solid #e0e0e0; border-radius: 15px; padding: 30px; transition: all 0.3s; cursor: pointer; hover: transform: translateY(-5px); hover: box-shadow: 0 10px 25px rgba(0,0,0,0.1);" onclick="startCourse('${lang}')">
+                <div style="font-size: 4rem; text-align: center; margin-bottom: 20px;">${getLanguageIcon(lang)}</div>
+                <h3 style="text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 1.5rem;">${lang}</h3>
+                <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">Start your ${lang} journey</p>
+                <div style="text-align: center;">
+                    <span style="display: inline-block; padding: 10px 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50px; font-weight: bold;">
+                        Start Learning →
+                    </span>
+                </div>
+            </div>
+        `).join('');
+        
+    } catch (error) {
+        console.error('Error loading courses:', error);
+    }
+}
+
+function getLanguageIcon(lang) {
+    const icons = {
+        'Python': '🐍',
+        'JavaScript': '📜',
+        'Java': '☕',
+        'C++': '⚡',
+        'SQL': '🗄️',
+        'HTML': '🌐',
+        'CSS': '🎨',
+        'React': '⚛️'
+    };
+    return icons[lang] || '💻';
+}
+
+let currentCourseLanguage = null;
+
+async function startCourse(language) {
+    // Show the course modal instead of navigating
+    showPopup(language);
+}
+
+function showPopup(language) {
+    const popup = document.getElementById('course-popup');
+    if (popup) {
+        popup.style.display = 'block';
+        loadCourseDetails(language);
+    }
+}
+
+function closePopup() {
+    document.getElementById('course-popup').style.display = 'none';
+}
+
+function toggleChapter(headerElement) {
+    // Get the content and icon elements
+    const header = headerElement.classList?.contains('chapter-header') ?
+        headerElement :
+        headerElement.closest('.chapter-header');
+    
+    if (!header) return;
+    
+    const content = header.nextElementSibling;
+    const icon = header.querySelector('.dropdown-icon');
+    
+    if (!content || !icon) return;
+    
+    // Close all other chapters first
+    const allChapters = document.querySelectorAll('.chapter-item');
+    allChapters.forEach(chapter => {
+        const otherContent = chapter.querySelector('.chapter-content');
+        const otherIcon = chapter.querySelector('.dropdown-icon');
+        
+        if (otherContent !== content) {
+            otherContent?.classList.remove('open');
+            otherIcon?.classList.remove('open');
+        }
+    });
+    
+    // Toggle current chapter
+    content.classList.toggle('open');
+    icon.classList.toggle('open');
+    
+    // Scroll the content into view if opening
+    if (content.classList.contains('open')) {
+        content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+}
+
+async function loadCourseDetails(language) {
+    currentCourseLanguage = language;
+    
+    try {
+        // Fetch course details
+        const response = await fetch(`/get_course_details?language=${encodeURIComponent(language)}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch course details');
+        }
+        
+        const courseData = await response.json();
+        
+        // Update course info
+        const courseInfoTitle = document.querySelector('.course-info h2');
+        const courseInfoDesc = document.querySelector('.course-info p');
+        
+        if (courseInfoTitle) {
+            courseInfoTitle.textContent = `${courseData.language} Programming Course`;
+        }
+        if (courseInfoDesc) {
+            courseInfoDesc.textContent = courseData.description || 'Learn programming with our structured curriculum.';
+        }
+        
+        // Clear and update chapters
+        const chaptersContainer = document.getElementById('course-details');
+        const accordion = chaptersContainer.querySelector('.chapter-accordion');
+        
+        if (accordion && courseData.chapters) {
+            accordion.innerHTML = courseData.chapters.map((chapter, index) => `
+                <div class="chapter-item">
+                    <div class="chapter-header" onclick="toggleChapter(this)">
+                        <h4 class="chapter-title">Chapter ${index + 1}: ${chapter.title}</h4>
+                        <span class="dropdown-icon">▼</span>
+                    </div>
+                    <div class="chapter-content">
+                        ${chapter.description ? `<p>${chapter.description}</p>` : ''}
+                        ${chapter.sampleCode ? `
+                            <div style="margin-top: 15px;">
+                                <h5>Code Example:</h5>
+                                <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>${escapeHtml(chapter.sampleCode)}</code></pre>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+    } catch (error) {
+        console.error('Error loading course details:', error);
+        alert('Failed to load course details. Please try again.');
+    }
+}
+
+function downloadCoursePDF() {
+    if (!currentCourseLanguage) {
+        console.error('No course language specified');
+        return;
+    }
+    
+    // Show loading state
+    const downloadBtn = document.querySelector('.download-btn');
+    const originalText = downloadBtn.textContent;
+    downloadBtn.disabled = true;
+    downloadBtn.textContent = 'Generating PDF...';
+    
+    fetch(`/download_course_pdf/${currentCourseLanguage}`)
+        .then(async response => {
+            if (!response.ok) {
+                const errorData = await response.json().catch(() => null);
+                throw new Error(errorData?.error || `Server returned ${response.status}`);
+            }
+            return response.blob();
+        })
+        .then(blob => {
+            // Create download link
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentCourseLanguage}_programming_course.pdf`;
+            
+            // Trigger download
+            document.body.appendChild(a);
+            a.click();
+            
+            // Cleanup
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        })
+        .catch(error => {
+            console.error('Error details:', error);
+            alert(`Failed to download course material: ${error.message}`);
+        })
+        .finally(() => {
+            // Reset button state
+            downloadBtn.disabled = false;
+            downloadBtn.textContent = originalText;
+        });
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+// Close popup when clicking outside
+document.addEventListener('click', function(event) {
+    const popup = document.getElementById('course-popup');
+    if (event.target === popup) {
+        closePopup();
+    }
+});
+
+// Load courses when page loads
+document.addEventListener('DOMContentLoaded', loadCourses);
+</script>
+{% endblock %}

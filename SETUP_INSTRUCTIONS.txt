@@ -1,0 +1,51 @@
+================================================================================
+ONELARN PROJECT - LOCAL SETUP INSTRUCTIONS (Windows)
+================================================================================
+
+STEP 1: Open PowerShell or Command Prompt
+   - Navigate to the project directory: C:\Project\OneLearn
+
+STEP 2: Install Essential Packages
+   Run these commands one by one:
+   -----------------
+   python -m pip install Flask Flask-SQLAlchemy Flask-Login Flask-WTF Werkzeug python-dotenv WTForms
+   python -m pip install email_validator
+   python -m pip install numpy --only-binary :all:
+   python -m pip install spacy --only-binary :all:
+   python -m pip install reportlab requests pillow
+   -----------------
+
+STEP 3: Download spaCy Language Model
+   -----------------
+   python -m spacy download en_core_web_sm
+   -----------------
+
+STEP 4: Run the Application
+   -----------------
+   python app.py
+   -----------------
+
+STEP 5: Access the Application
+   Open your web browser and go to:
+   http://localhost:5000
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+If spaCy installation fails:
+   Use pre-built wheels: python -m pip install spacy --only-binary :all:
+
+If port 5000 is already in use:
+   1. Find and close the application using port 5000
+   2. Or modify app.py (last line) to use a different port
+
+If you see database errors:
+   Delete the "instance" folder and run the app again:
+   Remove-Item -Recurse -Force instance
+
+If ModuleNotFoundError occurs:
+   Install the specific missing package:
+   python -m pip install <package-name>
+
+================================================================================
