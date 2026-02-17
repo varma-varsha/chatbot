@@ -1,10 +1,26 @@
 {% extends "base.html" %}
 
+{% block flash_messages %}{% endblock %}
+
 {% block content %}
 <div class="auth-container">
     <div class="auth-box">
         <h2>Admin Signup</h2>
         <p class="auth-subtitle">Create an administrator account</p>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}"
+            style="margin-bottom: 1rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.875rem; 
+            {% if category == 'danger' %}background-color: #fee2e2; color: #991b1b; border: 1px solid #fecaca;{% endif %}
+            {% if category == 'success' %}background-color: #dcfce7; color: #166534; border: 1px solid #bbf7d0;{% endif %}
+            {% if category == 'info' %}background-color: #e0f2fe; color: #075985; border: 1px solid #bae6fd;{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
 
         <form method="POST" action="{{ url_for('admin_signup') }}" class="auth-form">
             {{ form.hidden_tag() }}
@@ -27,7 +43,13 @@
 
             <div class="form-group">
                 {{ form.password.label }}
-                {{ form.password(class="form-control", placeholder="Create a password") }}
+                <div style="position: relative;">
+                    {{ form.password(class="form-control", id="password", placeholder="Create a password") }}
+                    <button type="button" onclick="togglePassword('password', 'toggle-password-icon')"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #6b7280; padding: 0;">
+                        <i id="toggle-password-icon" class="fas fa-eye"></i>
+                    </button>
+                </div>
                 {% for error in form.password.errors %}
                 <span class="error-message">{{ error }}</span>
                 {% endfor %}
@@ -35,7 +57,14 @@
 
             <div class="form-group">
                 {{ form.confirm_password.label }}
-                {{ form.confirm_password(class="form-control", placeholder="Confirm password") }}
+                <div style="position: relative;">
+                    {{ form.confirm_password(class="form-control", id="confirm_password", placeholder="Confirm
+                    password") }}
+                    <button type="button" onclick="togglePassword('confirm_password', 'toggle-confirm-password-icon')"
+                        style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #6b7280; padding: 0;">
+                        <i id="toggle-confirm-password-icon" class="fas fa-eye"></i>
+                    </button>
+                </div>
                 {% for error in form.confirm_password.errors %}
                 <span class="error-message">{{ error }}</span>
                 {% endfor %}

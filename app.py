@@ -200,7 +200,7 @@ def add_course():
 @login_required
 @admin_required
 def admin_users():
-    users = User.query.filter_by(role='customer').all()
+    users = User.query.all()
     return render_template('admin_users.html', users=users)
 
 
@@ -694,6 +694,11 @@ def learning():
 @login_required
 def review():
     return render_template('review.html')
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
 
 
 if __name__ == '__main__':

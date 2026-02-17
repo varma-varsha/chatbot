@@ -11,7 +11,9 @@
 
         <div class="course-info">
             <h2>Complete Python Masterclass</h2>
-            <p>Master Python programming from basics to advanced concepts. Learn through practical examples and real-world projects. This comprehensive course covers everything you need to become a proficient Python developer.</p>
+            <p>Master Python programming from basics to advanced concepts. Learn through practical examples and
+                real-world projects. This comprehensive course covers everything you need to become a proficient Python
+                developer.</p>
         </div>
 
         <div id="course-details" class="popup-body">
@@ -31,17 +33,20 @@
 
 <div class="container" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
     <div class="header-section" style="margin-bottom: 40px; text-align: center;">
-        <h1 style="font-size: 3rem; color: #2c3e50; margin-bottom: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Adaptive Learning</h1>
+        <h1
+            style="font-size: 3rem; color: #2c3e50; margin-bottom: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            Adaptive Learning</h1>
         <p style="font-size: 1.3rem; color: #7f8c8d;">Personalized learning paths tailored to your pace</p>
     </div>
 
-    <div class="intro-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; color: white; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);">
+    <div class="intro-card"
+        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; color: white; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);">
         <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
             <div style="font-size: 5rem; flex-shrink: 0;">🎓</div>
             <div style="flex: 1;">
                 <h2 style="margin: 0 0 15px 0; font-size: 2rem; color: white;">Smart Learning Paths</h2>
                 <p style="margin: 0; font-size: 1.1rem; line-height: 1.6; opacity: 0.95; color: white;">
-                    Our AI analyzes your learning style and progress to recommend the perfect courses for you. 
+                    Our AI analyzes your learning style and progress to recommend the perfect courses for you.
                     Start from the basics or jump to advanced topics - we adapt to your pace.
                 </p>
             </div>
@@ -49,8 +54,9 @@
     </div>
 
     <h2 style="color: #2c3e50; margin-bottom: 30px; font-size: 2rem;">Available Courses</h2>
-    
-    <div id="courses-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px;">
+
+    <div id="courses-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px;">
         <!-- Courses will be dynamically inserted here -->
     </div>
 
@@ -76,34 +82,35 @@
     </div>
 
     <div class="action-buttons" style="margin-top: 40px; text-align: center;">
-        <a href="{{ url_for('dashboard') }}" style="display: inline-block; padding: 15px 40px; background: #667eea; color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; margin: 0 10px; transition: transform 0.3s;">
+        <a href="{{ url_for('dashboard') }}"
+            style="display: inline-block; padding: 15px 40px; background: #667eea; color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; margin: 0 10px; transition: transform 0.3s;">
             ← Back to Dashboard
         </a>
     </div>
 </div>
 
 <script>
-// Load available courses
-async function loadCourses() {
-    try {
-        const response = await fetch('/get_available_languages');
-        const data = await response.json();
-        const courses = data.languages || [];
-        
-        const coursesGrid = document.getElementById('courses-grid');
-        
-        if (courses.length === 0) {
-            coursesGrid.innerHTML = `
+    // Load available courses
+    async function loadCourses() {
+        try {
+            const response = await fetch('/get_available_languages');
+            const data = await response.json();
+            const courses = data.languages || [];
+
+            const coursesGrid = document.getElementById('courses-grid');
+
+            if (courses.length === 0) {
+                coursesGrid.innerHTML = `
                 <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #7f8c8d;">
                     <div style="font-size: 4rem; margin-bottom: 20px;">📚</div>
                     <h3 style="margin-bottom: 10px;">No courses available</h3>
                     <p>Courses are being added soon!</p>
                 </div>
             `;
-            return;
-        }
-        
-        coursesGrid.innerHTML = courses.map(lang => `
+                return;
+            }
+
+            coursesGrid.innerHTML = courses.map(lang => `
             <div style="background: white; border: 2px solid #e0e0e0; border-radius: 15px; padding: 30px; transition: all 0.3s; cursor: pointer; hover: transform: translateY(-5px); hover: box-shadow: 0 10px 25px rgba(0,0,0,0.1);" onclick="startCourse('${lang}')">
                 <div style="font-size: 4rem; text-align: center; margin-bottom: 20px;">${getLanguageIcon(lang)}</div>
                 <h3 style="text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 1.5rem;">${lang}</h3>
@@ -115,113 +122,134 @@ async function loadCourses() {
                 </div>
             </div>
         `).join('');
-        
-    } catch (error) {
-        console.error('Error loading courses:', error);
+
+        } catch (error) {
+            console.error('Error loading courses:', error);
+        }
     }
-}
 
-function getLanguageIcon(lang) {
-    const icons = {
-        'Python': '🐍',
-        'JavaScript': '📜',
-        'Java': '☕',
-        'C++': '⚡',
-        'SQL': '🗄️',
-        'HTML': '🌐',
-        'CSS': '🎨',
-        'React': '⚛️'
-    };
-    return icons[lang] || '💻';
-}
-
-let currentCourseLanguage = null;
-
-async function startCourse(language) {
-    // Show the course modal instead of navigating
-    showPopup(language);
-}
-
-function showPopup(language) {
-    const popup = document.getElementById('course-popup');
-    if (popup) {
-        popup.style.display = 'block';
-        loadCourseDetails(language);
+    function getLanguageIcon(lang) {
+        const icons = {
+            'Python': '🐍',
+            'JavaScript': '📜',
+            'Java': '☕',
+            'C++': '⚡',
+            'SQL': '🗄️',
+            'HTML': '🌐',
+            'CSS': '🎨',
+            'React': '⚛️'
+        };
+        return icons[lang] || '💻';
     }
-}
 
-function closePopup() {
-    document.getElementById('course-popup').style.display = 'none';
-}
+    let currentCourseLanguage = null;
 
-function toggleChapter(headerElement) {
-    // Get the content and icon elements
-    const header = headerElement.classList?.contains('chapter-header') ?
-        headerElement :
-        headerElement.closest('.chapter-header');
-    
-    if (!header) return;
-    
-    const content = header.nextElementSibling;
-    const icon = header.querySelector('.dropdown-icon');
-    
-    if (!content || !icon) return;
-    
-    // Close all other chapters first
-    const allChapters = document.querySelectorAll('.chapter-item');
-    allChapters.forEach(chapter => {
-        const otherContent = chapter.querySelector('.chapter-content');
-        const otherIcon = chapter.querySelector('.dropdown-icon');
-        
-        if (otherContent !== content) {
-            otherContent?.classList.remove('open');
-            otherIcon?.classList.remove('open');
-        }
-    });
-    
-    // Toggle current chapter
-    content.classList.toggle('open');
-    icon.classList.toggle('open');
-    
-    // Scroll the content into view if opening
-    if (content.classList.contains('open')) {
-        content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    async function startCourse(language) {
+        showPopup(language);
     }
-}
 
-async function loadCourseDetails(language) {
-    currentCourseLanguage = language;
-    
-    try {
-        // Fetch course details
-        const response = await fetch(`/get_course_details?language=${encodeURIComponent(language)}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch course details');
+    function showPopup(language) {
+        const popup = document.getElementById('course-popup');
+        if (popup) {
+            popup.style.display = 'block';
+            loadCourseDetails(language);
         }
-        
-        const courseData = await response.json();
-        
-        // Update course info
-        const courseInfoTitle = document.querySelector('.course-info h2');
-        const courseInfoDesc = document.querySelector('.course-info p');
-        
-        if (courseInfoTitle) {
-            courseInfoTitle.textContent = `${courseData.language} Programming Course`;
+    }
+
+    function closePopup() {
+        document.getElementById('course-popup').style.display = 'none';
+    }
+
+    function toggleChapter(headerElement) {
+        const header = headerElement.classList?.contains('chapter-header') ?
+            headerElement :
+            headerElement.closest('.chapter-header');
+
+        if (!header) return;
+
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('.dropdown-icon');
+
+        if (!content || !icon) return;
+
+        // Close other chapters
+        const allChapters = document.querySelectorAll('.chapter-item');
+        allChapters.forEach(chapter => {
+            const otherContent = chapter.querySelector('.chapter-content');
+            const otherIcon = chapter.querySelector('.dropdown-icon');
+
+            if (otherContent !== content) {
+                otherContent?.classList.remove('open');
+                otherIcon?.classList.remove('open');
+            }
+        });
+
+        // Toggle current
+        content.classList.toggle('open');
+        icon.classList.toggle('open');
+
+        if (content.classList.contains('open')) {
+            content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-        if (courseInfoDesc) {
-            courseInfoDesc.textContent = courseData.description || 'Learn programming with our structured curriculum.';
-        }
-        
-        // Clear and update chapters
-        const chaptersContainer = document.getElementById('course-details');
-        const accordion = chaptersContainer.querySelector('.chapter-accordion');
-        
-        if (accordion && courseData.chapters) {
-            accordion.innerHTML = courseData.chapters.map((chapter, index) => `
-                <div class="chapter-item">
+    }
+
+    async function loadCourseDetails(language) {
+        currentCourseLanguage = language;
+        try {
+            // Add progress bar if missing
+            const progressHTML = `
+            <div class="progress-container">
+                <div class="progress-bar" style="width: 0%; background: green; height: 16px; border-radius: 12px; transition: width 0.3s ease;">
+                    <div class="progress-fill"></div>
+                </div>
+                <span class="progress-text" style="display: block; text-align: center; margin-top: 5px; font-size: 0.9em; color: #666;">0% Complete</span>
+            </div>
+        `;
+
+            if (!document.querySelector('.progress-container')) {
+                document.querySelector('.popup-header').insertAdjacentHTML('afterend', progressHTML);
+            }
+
+            // Fetch user progress
+            const progressResponse = await fetch(`/api/get_user_progress/${language}`);
+            if (!progressResponse.ok) throw new Error('Failed to fetch user progress');
+            const progressData = await progressResponse.json();
+
+            // Update progress bar
+            const progressFill = document.querySelector('.progress-bar');
+            const progressText = document.querySelector('.progress-text');
+            if (progressFill && progressText) {
+                progressFill.style.width = `${progressData.progress_percentage}%`;
+                progressText.textContent = `${Math.round(progressData.progress_percentage)}% Complete`;
+            }
+
+            // Fetch course details
+            const response = await fetch(`/get_course_details?language=${encodeURIComponent(language)}`);
+            if (!response.ok) throw new Error('Failed to fetch course details');
+            const courseData = await response.json();
+
+            // Update header info
+            const courseInfoTitle = document.querySelector('.course-info h2');
+            const courseInfoDesc = document.querySelector('.course-info p');
+
+            if (courseInfoTitle) courseInfoTitle.textContent = `Complete ${language} Masterclass`;
+            if (courseInfoDesc) courseInfoDesc.textContent = courseData.description || 'Learn programming with our structured curriculum.';
+
+            // Render chapters
+            const chaptersContainer = document.getElementById('course-details');
+            const accordion = chaptersContainer.querySelector('.chapter-accordion');
+
+            if (accordion && courseData.chapters) {
+                accordion.innerHTML = courseData.chapters.map((chapter, index) => {
+                    const chapterNumber = index + 1;
+                    const isCompleted = progressData.completed_chapters.includes(chapterNumber);
+
+                    return `
+                <div class="chapter-item ${isCompleted ? 'submitted' : ''}" data-chapter="${chapterNumber}">
                     <div class="chapter-header" onclick="toggleChapter(this)">
-                        <h4 class="chapter-title">Chapter ${index + 1}: ${chapter.title}</h4>
+                        <h4 class="chapter-title">Chapter ${chapterNumber}: ${chapter.title}</h4>
                         <span class="dropdown-icon">▼</span>
+                        ${isCompleted ? '<span class="completion-check">✓</span>' : ''}
                     </div>
                     <div class="chapter-content">
                         ${chapter.description ? `<p>${chapter.description}</p>` : ''}
@@ -231,78 +259,211 @@ async function loadCourseDetails(language) {
                                 <pre style="background: #f5f5f5; padding: 15px; border-radius: 5px; overflow-x: auto;"><code>${escapeHtml(chapter.sampleCode)}</code></pre>
                             </div>
                         ` : ''}
+                        <div class="chapter-buttons" style="margin-top: 20px; display: flex; gap: 10px;">
+                            <button class="submit-btn ${isCompleted ? 'completed' : ''}" onclick="submitChapter(${chapterNumber})" ${isCompleted ? 'disabled' : ''}>
+                                ${isCompleted ? 'Completed' : 'Complete & Continue'}
+                            </button>
+                            <button class="next-btn" onclick="nextChapter(${chapterNumber})">Next Chapter</button>
+                        </div>
                     </div>
                 </div>
-            `).join('');
-        }
-        
-    } catch (error) {
-        console.error('Error loading course details:', error);
-        alert('Failed to load course details. Please try again.');
-    }
-}
-
-function downloadCoursePDF() {
-    if (!currentCourseLanguage) {
-        console.error('No course language specified');
-        return;
-    }
-    
-    // Show loading state
-    const downloadBtn = document.querySelector('.download-btn');
-    const originalText = downloadBtn.textContent;
-    downloadBtn.disabled = true;
-    downloadBtn.textContent = 'Generating PDF...';
-    
-    fetch(`/download_course_pdf/${currentCourseLanguage}`)
-        .then(async response => {
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => null);
-                throw new Error(errorData?.error || `Server returned ${response.status}`);
+            `}).join('');
             }
-            return response.blob();
-        })
-        .then(blob => {
-            // Create download link
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${currentCourseLanguage}_programming_course.pdf`;
-            
-            // Trigger download
-            document.body.appendChild(a);
-            a.click();
-            
-            // Cleanup
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        })
-        .catch(error => {
-            console.error('Error details:', error);
-            alert(`Failed to download course material: ${error.message}`);
-        })
-        .finally(() => {
-            // Reset button state
-            downloadBtn.disabled = false;
-            downloadBtn.textContent = originalText;
-        });
-}
 
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// Close popup when clicking outside
-document.addEventListener('click', function(event) {
-    const popup = document.getElementById('course-popup');
-    if (event.target === popup) {
-        closePopup();
+        } catch (error) {
+            console.error('Error loading course details:', error);
+            alert('Failed to load course details. Please try again.');
+        }
     }
-});
 
-// Load courses when page loads
-document.addEventListener('DOMContentLoaded', loadCourses);
+    async function submitChapter(chapterNumber) {
+        try {
+            if (!currentCourseLanguage) throw new Error('Course language not specified');
+
+            const chapterElement = document.querySelector(`[data-chapter="${chapterNumber}"]`);
+            const submitButton = chapterElement?.querySelector('.submit-btn');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.textContent = 'Submitting...';
+            }
+
+            const response = await fetch('/api/update_progress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    language: currentCourseLanguage,
+                    chapterNumber: chapterNumber
+                })
+            });
+
+            const data = await response.json();
+            if (!response.ok) throw new Error(data.error || `Server returned ${response.status}`);
+
+            // Update UI
+            if (chapterElement) {
+                chapterElement.classList.add('submitted');
+
+                // Add checkmark if missing
+                const headerElement = chapterElement.querySelector('.chapter-header');
+                if (headerElement && !headerElement.querySelector('.completion-check')) {
+                    const checkmark = document.createElement('span');
+                    checkmark.className = 'completion-check';
+                    checkmark.textContent = '✓';
+                    headerElement.appendChild(checkmark);
+                }
+
+                if (submitButton) {
+                    submitButton.textContent = 'Completed';
+                    submitButton.classList.add('completed');
+                }
+            }
+
+            // Update progress bar
+            if (data.progress) {
+                const progressFill = document.querySelector('.progress-bar');
+                const progressText = document.querySelector('.progress-text');
+                if (progressFill && progressText) {
+                    progressFill.style.width = `${data.progress.progress_percentage}%`;
+                    progressText.textContent = `${Math.round(data.progress.progress_percentage)}% Complete`;
+                }
+            }
+
+            // Success Feedback
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'success-message';
+            messageContainer.textContent = `Chapter ${chapterNumber} completed!`;
+            messageContainer.style.cssText = 'background: #dcfce7; color: #166534; padding: 10px; margin-top: 10px; border-radius: 5px; text-align: center;';
+            chapterElement.querySelector('.chapter-content').appendChild(messageContainer);
+
+            setTimeout(() => messageContainer.remove(), 2000);
+
+            // Auto-advance
+            setTimeout(() => nextChapter(chapterNumber), 1000);
+
+        } catch (error) {
+            console.error('Error submitting chapter:', error);
+            alert(`Error: ${error.message}`);
+
+            // Reset button
+            const submitButton = document.querySelector(`[data-chapter="${chapterNumber}"] .submit-btn`);
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Complete & Continue';
+            }
+        }
+    }
+
+    function nextChapter(chapterNumber) {
+        const currentChapter = document.querySelector(`[data-chapter="${chapterNumber}"]`);
+        if (currentChapter) {
+            // Close current
+            const currentHeader = currentChapter.querySelector('.chapter-header');
+            if (currentHeader.nextElementSibling.classList.contains('open')) {
+                toggleChapter(currentHeader);
+            }
+        }
+
+        const nextChapterNum = chapterNumber + 1;
+        const nextChapter = document.querySelector(`[data-chapter="${nextChapterNum}"]`);
+
+        if (nextChapter) {
+            // Open next
+            setTimeout(() => {
+                const nextHeader = nextChapter.querySelector('.chapter-header');
+                toggleChapter(nextHeader);
+            }, 300);
+        } else {
+            // Course Completed?
+            if (chapterNumber >= document.querySelectorAll('.chapter-item').length) {
+                alert('Congratulations! You have reached the end of the course.');
+            }
+        }
+    }
+
+    function downloadCoursePDF() {
+        if (!currentCourseLanguage) return;
+
+        const downloadBtn = document.querySelector('.download-btn');
+        const originalText = downloadBtn.textContent;
+        downloadBtn.disabled = true;
+        downloadBtn.textContent = 'Generating PDF...';
+
+        fetch(`/download_course_pdf/${currentCourseLanguage}`)
+            .then(async response => {
+                if (!response.ok) throw new Error('Download failed');
+                return response.blob();
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${currentCourseLanguage}_programming_course.pdf`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+            .catch(error => alert(error.message))
+            .finally(() => {
+                downloadBtn.disabled = false;
+                downloadBtn.textContent = originalText;
+            });
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Close popup when clicking outside
+    document.addEventListener('click', function (event) {
+        const popup = document.getElementById('course-popup');
+        if (event.target === popup) {
+            closePopup();
+        }
+    });
+
+    // Styles for the new elements
+    const styles = `
+    .submit-btn {
+        background-color: #4CAF50;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+    .submit-btn:hover { background-color: #45a049; }
+    .submit-btn.completed { background-color: #48bb78; cursor: default; }
+    .submit-btn:disabled { opacity: 0.7; cursor: not-allowed; }
+    
+    .next-btn {
+        background-color: #2196F3;
+        color: white;
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+    .next-btn:hover { background-color: #0b7dda; }
+    
+    .chapter-item.submitted { border-left: 4px solid #48bb78; }
+    .completion-check { color: #48bb78; margin-left: 10px; font-weight: bold; font-size: 1.2em; }
+    .progress-container { margin: 15px 0; padding: 0 20px; }
+`;
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = styles;
+    document.head.appendChild(styleSheet);
+
+    // Load courses when page loads
+    document.addEventListener('DOMContentLoaded', loadCourses);
 </script>
 {% endblock %}
