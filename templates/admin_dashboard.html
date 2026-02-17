@@ -1,0 +1,88 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<h1 class="text-2xl font-bold text-gray-900 mb-8">Dashboard Overview</h1>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-500">Total Users</p>
+                <p class="text-3xl font-bold text-gray-900">{{ users_count }}</p>
+            </div>
+            <div class="p-3 bg-blue-100 rounded-full">
+                <i class="fas fa-users text-blue-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between">
+            <div>
+                <p class="text-sm font-medium text-gray-500">Total Courses</p>
+                <p class="text-3xl font-bold text-gray-900">{{ courses_count }}</p>
+            </div>
+            <div class="p-3 bg-green-100 rounded-full">
+                <i class="fas fa-book text-green-600 text-xl"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Activity / Lists -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Courses List -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="font-bold text-gray-900">Active Courses</h3>
+            <a href="{{ url_for('add_course') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Add
+                New</a>
+        </div>
+        <div class="divide-y divide-gray-100">
+            {% for course in courses %}
+            <div class="p-4 hover:bg-gray-50 transition-colors">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <h4 class="font-medium text-gray-900">{{ course.language }}</h4>
+                        <p class="text-sm text-gray-500 mt-1 line-clamp-1">{{ course.description }}</p>
+                    </div>
+                    <span class="text-xs font-medium bg-gray-100 text-gray-600 px-2 py-1 rounded">{{
+                        course.chapters|length }} Chapters</span>
+                </div>
+            </div>
+            {% else %}
+            <div class="p-8 text-center text-gray-500">No courses available.</div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Recent Users -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+            <h3 class="font-bold text-gray-900">Recent Users</h3>
+            <a href="{{ url_for('admin_users') }}" class="text-sm text-blue-600 hover:text-blue-700 font-medium">View
+                All</a>
+        </div>
+        <div class="divide-y divide-gray-100">
+            {% for user in users %}
+            <div class="p-4 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex items-center space-x-3">
+                    <div
+                        class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-xs font-bold">
+                        {{ user.username[0]|upper }}
+                    </div>
+                    <div>
+                        <p class="font-medium text-gray-900">{{ user.username }}</p>
+                        <p class="text-xs text-gray-500">{{ user.email }}</p>
+                    </div>
+                </div>
+                <span class="text-xs text-gray-400">Customer</span>
+            </div>
+            {% else %}
+            <div class="p-8 text-center text-gray-500">No users yet.</div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,11 +1,12 @@
 from flask import render_template, redirect, url_for, flash, request, jsonify, abort, current_app
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from chatbot import Chatbot
-from models import app, db, User, CourseProgress
+from functools import wraps
+from models import app, db, User, CourseProgress, Course, Chapter
 import json
 from pathlib import Path
 from forms import SignupForm, LoginForm
-from flask_wtf.csrf import generate_csrf
+from flask_wtf.csrf import generate_csrf, CSRFProtect
 from datetime import datetime
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import letter, A4
@@ -24,12 +25,26 @@ logger = logging.getLogger(__name__)
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+login_manager.init_app(app)
 login_manager.login_view = 'login'
+
+csrf = CSRFProtect(app)
+
 
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return db.session.get(User, int(user_id))
+
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not current_user.is_authenticated or current_user.role != 'admin':
+            flash('You do not have permission to access this page.', 'danger')
+            return redirect(url_for('index'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 
 @app.route('/')
@@ -106,6 +121,8 @@ def login():
         if user and user.check_password(form.password.data):
             login_user(user)
             next_page = request.args.get('next')
+            if user.role == 'admin':
+                return redirect(next_page or url_for('admin_dashboard'))
             return redirect(next_page or url_for('dashboard'))
         else:
             flash('Invalid email or password', 'danger')
@@ -113,8 +130,84 @@ def login():
     return render_template('login.html', form=form)
 
 
+@app.route('/admin/signup', methods=['GET', 'POST'])
+def admin_signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('admin_dashboard'))
+
+    form = SignupForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, email=form.email.data, role='admin')
+        user.set_password(form.password.data)
+        db.session.add(user)
+        db.session.commit()
+
+        flash('Admin signup successful! Please log in.', 'success')
+        return redirect(url_for('login'))
+
+    return render_template('admin_signup.html', form=form)
+
+
+@app.route('/admin/dashboard')
+@login_required
+@admin_required
+def admin_dashboard():
+    users_count = User.query.filter_by(role='customer').count()
+    courses_count = Course.query.count()
+    courses = Course.query.all()
+    users = User.query.filter_by(role='customer').limit(5).all() # Show recent users
+    return render_template('admin_dashboard.html', 
+                         users_count=users_count, 
+                         courses_count=courses_count,
+                         courses=courses,
+                         users=users)
+
+
+@app.route('/admin/add_course', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def add_course():
+    if request.method == 'POST':
+        try:
+            data = request.json
+            course = Course(
+                language=data['language'],
+                description=data['description']
+            )
+            db.session.add(course)
+            db.session.flush()
+
+            for i, chapter_data in enumerate(data['chapters']):
+                chapter = Chapter(
+                    course_id=course.id,
+                    title=chapter_data['title'],
+                    description=chapter_data['description'],
+                    sample_code=chapter_data.get('sampleCode', ''),
+                    order=i + 1
+                )
+                db.session.add(chapter)
+            
+            db.session.commit()
+            return jsonify({'success': True})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 500
+
+    return render_template('add_course.html')
+
+
+@app.route('/admin/users')
+@login_required
+@admin_required
+def admin_users():
+    users = User.query.filter_by(role='customer').all()
+    return render_template('admin_users.html', users=users)
+
+
+# Add this function to load the courses data
 # Add this function to load the courses data
 def load_courses():
+    # Keep this for backward compatibility if needed, but prefer DB
     try:
         courses_file = Path('courses.json')
         if not courses_file.exists():
@@ -127,6 +220,35 @@ def load_courses():
     except Exception as e:
         raise Exception(f"Error loading courses: {str(e)}")
 
+def init_db_data():
+    if Course.query.first() is None:
+        print("Initializing database with course data...")
+        try:
+            data = load_courses()
+            for course_data in data['courses']:
+                course = Course(
+                    language=course_data['language'],
+                    description=course_data['description']
+                )
+                db.session.add(course)
+                db.session.flush()  # Get course ID
+
+                for i, chapter_data in enumerate(course_data['chapters']):
+                    chapter = Chapter(
+                        course_id=course.id,
+                        title=chapter_data['title'],
+                        description=chapter_data.get('description', ''),
+                        sample_code=chapter_data.get('sampleCode', ''),
+                        order=i + 1
+                    )
+                    db.session.add(chapter)
+            
+            db.session.commit()
+            print("Database initialized successfully!")
+        except Exception as e:
+            db.session.rollback()
+            print(f"Error initializing database: {e}")
+
 
 # Add these new routes
 @app.route('/get_course_details', methods=['GET'])
@@ -138,21 +260,25 @@ def get_course_details():
                 'error': 'Language parameter is required'
             }), 400
 
-        courses_data = load_courses()
-
-        # Find the requested course
-        course = next(
-            (course for course in courses_data['courses']
-             if course['language'].lower() == language.lower()),
-            None
-        )
+        course = Course.query.filter_by(language=language).first()
 
         if not course:
             return jsonify({
                 'error': f'No course found for language: {language}'
             }), 404
+            
+        course_data = {
+            'language': course.language,
+            'description': course.description,
+            'chapters': [{
+                'title': c.title,
+                'description': c.description,
+                'sampleCode': c.sample_code,
+                'order': c.order
+            } for c in course.chapters]
+        }
 
-        return jsonify(course)
+        return jsonify(course_data)
 
     except Exception as e:
         return jsonify({
@@ -163,8 +289,8 @@ def get_course_details():
 @app.route('/get_available_languages', methods=['GET'])
 def get_available_languages():
     try:
-        courses_data = load_courses()
-        languages = [course['language'] for course in courses_data['courses']]
+        courses = Course.query.with_entities(Course.language).all()
+        languages = [c.language for c in courses]
         return jsonify({
             'languages': languages
         })
@@ -181,18 +307,11 @@ def get_user_courses():
         # Get all course progress records for the current user
         progress_records = CourseProgress.query.filter_by(user_id=current_user.id).all()
 
-        # Get all available courses for reference
-        courses_data = load_courses()
-
         # Format the response
         user_courses = []
         for progress in progress_records:
             # Find the course details
-            course = next(
-                (c for c in courses_data['courses']
-                 if c['language'].lower() == progress.course_language.lower()),
-                None
-            )
+            course = Course.query.filter_by(language=progress.course_language).first()
 
             if course:
                 # Parse chapters_completed if it's a string
@@ -213,7 +332,7 @@ def get_user_courses():
                     'last_accessed_chapter': progress.last_accessed_chapter,
                     'chapters_completed': chapters_completed,
                     'chapters_completed_count': len(chapters_completed),
-                    'total_chapters': len(course.get('chapters', [])),
+                    'total_chapters': len(course.chapters),
                     'started_at': progress.started_at.isoformat() if progress.started_at else None,
                     'last_updated': progress.last_updated.isoformat() if progress.last_updated else None
                 })
@@ -241,19 +360,8 @@ def download_course_pdf(course_language):
             app.logger.error(f"No progress found for user {current_user.id} in {course_language}")
             return jsonify({'error': 'No course progress found'}), 404
 
-        # Load courses data
-        try:
-            courses_data = load_courses()
-        except Exception as e:
-            app.logger.error(f"Error loading courses data: {str(e)}")
-            return jsonify({'error': 'Failed to load course data'}), 500
-
         # Find specific course
-        course = next(
-            (c for c in courses_data.get('courses', [])
-             if c['language'].lower() == course_language.lower()),
-            None
-        )
+        course = Course.query.filter_by(language=course_language).first()
 
         if not course:
             app.logger.error(f"Course not found: {course_language}")
@@ -335,33 +443,34 @@ def download_course_pdf(course_language):
 
         # Course Description
         elements.append(Paragraph("Course Overview", chapter_style))
-        elements.append(Paragraph(course['description'], desc_style))
+        elements.append(Paragraph(course.description, desc_style))
         elements.append(PageBreak())
 
         # Table of Contents
         elements.append(Paragraph("Table of Contents", chapter_style))
         elements.append(Spacer(1, 20))
-        for i, chapter in enumerate(course['chapters'], 1):
-            elements.append(Paragraph(f"Chapter {i}: {chapter['title']}", desc_style))
+        for i, chapter in enumerate(course.chapters, 1):
+            elements.append(Paragraph(f"Chapter {i}: {chapter.title}", desc_style))
         elements.append(PageBreak())
 
         # Chapters Content
-        for i, chapter in enumerate(course['chapters'], 1):
+        for i, chapter in enumerate(course.chapters, 1):
             # Chapter Title
-            elements.append(Paragraph(f"Chapter {i}: {chapter['title']}", chapter_style))
+            elements.append(Paragraph(f"Chapter {i}: {chapter.title}", chapter_style))
 
             # Chapter Description
-            if chapter.get('description'):
-                elements.append(Paragraph(chapter['description'], desc_style))
+            if chapter.description:
+                elements.append(Paragraph(chapter.description, desc_style))
 
             # Code Examples
             # In the chapter loop, update the code block creation:
-            if chapter.get('sampleCode'):
+            if chapter.sample_code:
                 elements.append(Spacer(1, 10))
                 elements.append(Paragraph("Code Example:", desc_style))
 
                 # Format code with proper indentation
-                formatted_code = textwrap.dedent(chapter['sampleCode']).strip()
+                formatted_code = textwrap.dedent(chapter.sample_code).strip()
+
 
                 # Split long lines to fit in the PDF
                 wrapped_lines = []
@@ -472,15 +581,10 @@ def update_progress():
 
         # Calculate progress percentage
         try:
-            courses_data = load_courses()
-            course = next(
-                (c for c in courses_data['courses']
-                 if c['language'].lower() == course_language.lower()),
-                None
-            )
+            course = Course.query.filter_by(language=course_language).first()
 
             if course:
-                total_chapters = len(course['chapters'])
+                total_chapters = len(course.chapters)
                 if total_chapters > 0:  # Prevent division by zero
                     progress.progress_percentage = (len(progress.chapters_completed) / total_chapters) * 100
             else:
@@ -599,4 +703,11 @@ if __name__ == '__main__':
         except Exception as e:
             print(f"Database initialization warning: {e}")
             # Continue anyway - tables might already exist
+            
+        # Initialize data
+        try:
+            init_db_data()
+        except Exception as e:
+            print(f"Data initialization error: {e}")
+
     app.run(debug=True, host='0.0.0.0', port=5000)

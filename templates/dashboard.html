@@ -16,8 +16,9 @@
             <div id="chat-messages" class="chat-messages"></div>
             <div class="chat-input-area">
                 <input type="text" id="user-message" placeholder="Type your message...">
-                <button onclick="sendMessage()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <button id="chat-send-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="22" y1="2" x2="11" y2="13"></line>
                         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
                     </svg>
@@ -28,14 +29,15 @@
 
     <!-- Course sidebar -->
     <!-- Course sidebar -->
-<div id="course-sidebar" class="fixed right-0 top-0 h-full w-64 bg-white shadow-lg border-l border-gray-200 overflow-y-auto">
-    <div class="p-4 border-b border-gray-200">
-        <h2 class="text-lg font-semibold text-gray-800">My Courses</h2>
+    <div id="course-sidebar"
+        class="fixed right-0 top-0 h-full w-64 bg-white shadow-lg border-l border-gray-200 overflow-y-auto">
+        <div class="p-4 border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-800">My Courses</h2>
+        </div>
+        <div id="courses-list" class="p-4 space-y-4">
+            <!-- Courses will be dynamically inserted here -->
+        </div>
     </div>
-    <div id="courses-list" class="p-4 space-y-4">
-        <!-- Courses will be dynamically inserted here -->
-    </div>
-</div>
 </div>
 
 <!-- Modal Popup -->
@@ -48,7 +50,9 @@
 
         <div class="course-info">
             <h2>Complete Python Masterclass</h2>
-            <p>Master Python programming from basics to advanced concepts. Learn through practical examples and real-world projects. This comprehensive course covers everything you need to become a proficient Python developer.</p>
+            <p>Master Python programming from basics to advanced concepts. Learn through practical examples and
+                real-world projects. This comprehensive course covers everything you need to become a proficient Python
+                developer.</p>
         </div>
 
         <div id="course-details" class="popup-body">
@@ -97,12 +101,12 @@
             </div>
         </div>
 
-<div class="popup-footer">
-    <button onclick="downloadCoursePDF()" class="download-btn">
-        Download Course Material
-    </button>
-    <button onclick="closePopup()" class="close-btn">Close</button>
-</div>
+        <div class="popup-footer">
+            <button onclick="downloadCoursePDF()" class="download-btn">
+                Download Course Material
+            </button>
+            <button onclick="closePopup()" class="close-btn">Close</button>
+        </div>
     </div>
 </div>
 
@@ -112,7 +116,7 @@
     import { createRoot } from 'https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/cjs/react-dom-client.production.min.js';
 
     // Define showPopup globally
-    window.showPopup = function(language) {
+    window.showPopup = function (language) {
         const popup = document.getElementById('course-popup');
         if (popup) {
             popup.style.display = 'block';
@@ -135,73 +139,73 @@
 </script>
 
 <script>
-function downloadCoursePDF() {
-    if (!currentCourseLanguage) {
-        console.error('No course language specified');
-        return;
+    function downloadCoursePDF() {
+        if (!currentCourseLanguage) {
+            console.error('No course language specified');
+            return;
+        }
+
+        // Show loading state
+        const downloadBtn = document.querySelector('.download-btn');
+        const originalText = downloadBtn.textContent;
+        downloadBtn.disabled = true;
+        downloadBtn.textContent = 'Generating PDF...';
+
+        fetch(`/download_course_pdf/${currentCourseLanguage}`)
+            .then(async response => {
+                if (!response.ok) {
+                    // Try to get error message from response
+                    const errorData = await response.json().catch(() => null);
+                    throw new Error(errorData?.error || `Server returned ${response.status}`);
+                }
+                return response.blob();
+            })
+            .then(blob => {
+                // Create download link
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${currentCourseLanguage}_programming_course.pdf`;
+
+                // Trigger download
+                document.body.appendChild(a);
+                a.click();
+
+                // Cleanup
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            })
+            .catch(error => {
+                console.error('Error details:', error);
+                alert(`Failed to download course material: ${error.message}`);
+            })
+            .finally(() => {
+                // Reset button state
+                downloadBtn.disabled = false;
+                downloadBtn.textContent = originalText;
+            });
     }
+    // Function to load user courses
+    async function loadUserCourses() {
+        const coursesList = document.getElementById('courses-list');
+        const sidebar = document.getElementById('course-sidebar');
 
-    // Show loading state
-    const downloadBtn = document.querySelector('.download-btn');
-    const originalText = downloadBtn.textContent;
-    downloadBtn.disabled = true;
-    downloadBtn.textContent = 'Generating PDF...';
-
-    fetch(`/download_course_pdf/${currentCourseLanguage}`)
-        .then(async response => {
-            if (!response.ok) {
-                // Try to get error message from response
-                const errorData = await response.json().catch(() => null);
-                throw new Error(errorData?.error || `Server returned ${response.status}`);
-            }
-            return response.blob();
-        })
-        .then(blob => {
-            // Create download link
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${currentCourseLanguage}_programming_course.pdf`;
-
-            // Trigger download
-            document.body.appendChild(a);
-            a.click();
-
-            // Cleanup
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-        })
-        .catch(error => {
-            console.error('Error details:', error);
-            alert(`Failed to download course material: ${error.message}`);
-        })
-        .finally(() => {
-            // Reset button state
-            downloadBtn.disabled = false;
-            downloadBtn.textContent = originalText;
-        });
-}
-// Function to load user courses
-async function loadUserCourses() {
-    const coursesList = document.getElementById('courses-list');
-    const sidebar = document.getElementById('course-sidebar');
-
-    // Show loading state
-    coursesList.innerHTML = `
+        // Show loading state
+        coursesList.innerHTML = `
         <div class="flex items-center justify-center h-32">
             <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
         </div>
     `;
 
-    try {
-        const response = await fetch('/api/get_user_courses');
-        if (!response.ok) throw new Error('Failed to fetch courses');
+        try {
+            const response = await fetch('/api/get_user_courses');
+            if (!response.ok) throw new Error('Failed to fetch courses');
 
-        const data = await response.json();
+            const data = await response.json();
 
-        if (data.courses && data.courses.length > 0) {
-            // Render courses
-            coursesList.innerHTML = data.courses.map(course => `
+            if (data.courses && data.courses.length > 0) {
+                // Render courses
+                coursesList.innerHTML = data.courses.map(course => `
                 <div
                     onclick="showPopup('${course.language}')"
                     class="cursor-pointer group hover:bg-blue-50 rounded-lg p-3 transition-all"
@@ -231,17 +235,17 @@ async function loadUserCourses() {
                     </div>
                 </div>
             `).join('');
-        } else {
-            // Show no courses message
-            coursesList.innerHTML = `
+            } else {
+                // Show no courses message
+                coursesList.innerHTML = `
                 <div class="text-center text-gray-500">
                     <p>No courses available</p>
                 </div>
             `;
-        }
-    } catch (error) {
-        console.error('Error loading courses:', error);
-        coursesList.innerHTML = `
+            }
+        } catch (error) {
+            console.error('Error loading courses:', error);
+            coursesList.innerHTML = `
             <div class="p-4 text-red-500">
                 <p>Failed to load courses</p>
                 <button
@@ -252,131 +256,131 @@ async function loadUserCourses() {
                 </button>
             </div>
         `;
-    }
-}
-
-// Make sure chat container makes space for sidebar
-document.addEventListener('DOMContentLoaded', function() {
-    const chatContainer = document.querySelector('.flex-1.flex.flex-col');
-    if (chatContainer) {
-        chatContainer.style.marginRight = '16rem'; // 256px = 16rem = w-64
+        }
     }
 
-    // Load courses when page loads
-    loadUserCourses();
-});
-async function submitChapter(chapterNumber) {
-    try {
-        // First verify we have the language
-        if (!currentCourseLanguage) {
-            throw new Error('Course language not specified');
+    // Make sure chat container makes space for sidebar
+    document.addEventListener('DOMContentLoaded', function () {
+        const chatContainer = document.querySelector('.flex-1.flex.flex-col');
+        if (chatContainer) {
+            chatContainer.style.marginRight = '16rem'; // 256px = 16rem = w-64
         }
 
-        // Add loading state
-        const chapterElement = document.querySelector(`[data-chapter="${chapterNumber}"]`);
-        const submitButton = chapterElement?.querySelector('.submit-btn');
-        if (submitButton) {
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
-        }
-
-        // Make the API call
-        const response = await fetch('/api/update_progress', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': document.querySelector('meta[name="csrf-token"]')?.content
-            },
-            body: JSON.stringify({
-                language: currentCourseLanguage,
-                chapterNumber: chapterNumber
-            })
-        });
-
-        // Parse the response
-        const data = await response.json();
-
-        // Handle non-200 responses
-        if (!response.ok) {
-            throw new Error(data.error || `Server returned ${response.status}`);
-        }
-
-        // Update UI to show completion
-        if (chapterElement) {
-            // Add submitted class
-            chapterElement.classList.add('submitted');
-
-            // Update header with checkmark
-            const headerElement = chapterElement.querySelector('.chapter-header');
-            if (headerElement && !headerElement.querySelector('.completion-check')) {
-                const checkmark = document.createElement('span');
-                checkmark.className = 'completion-check';
-                checkmark.textContent = '✓';
-                headerElement.appendChild(checkmark);
+        // Load courses when page loads
+        loadUserCourses();
+    });
+    async function submitChapter(chapterNumber) {
+        try {
+            // First verify we have the language
+            if (!currentCourseLanguage) {
+                throw new Error('Course language not specified');
             }
 
-            // Update submit button
+            // Add loading state
+            const chapterElement = document.querySelector(`[data-chapter="${chapterNumber}"]`);
+            const submitButton = chapterElement?.querySelector('.submit-btn');
             if (submitButton) {
                 submitButton.disabled = true;
-                submitButton.textContent = 'Completed';
-                submitButton.classList.add('completed');
+                submitButton.textContent = 'Submitting...';
             }
-        }
 
-        // Update progress bar if it exists
-        if (data.progress && data.progress.progress_percentage !== undefined) {
-            const progressFill = document.querySelector('.progress-bar');
-            const progressText = document.querySelector('.progress-text');
-            if (progressFill && progressText) {
-                const percentage = data.progress.progress_percentage;
-                progressFill.style.width = `${percentage}%`;
-                progressText.textContent = `${Math.round(percentage)}% Complete`;
+            // Make the API call
+            const response = await fetch('/api/update_progress', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    language: currentCourseLanguage,
+                    chapterNumber: chapterNumber
+                })
+            });
+
+            // Parse the response
+            const data = await response.json();
+
+            // Handle non-200 responses
+            if (!response.ok) {
+                throw new Error(data.error || `Server returned ${response.status}`);
             }
-        }
 
-        // Show success message
-        const messageContainer = document.createElement('div');
-        messageContainer.className = 'success-message';
-        messageContainer.textContent = `Chapter ${chapterNumber} completed successfully!`;
-        chapterElement.appendChild(messageContainer);
+            // Update UI to show completion
+            if (chapterElement) {
+                // Add submitted class
+                chapterElement.classList.add('submitted');
 
-        // Remove success message after 3 seconds
-        setTimeout(() => {
-            messageContainer.remove();
-        }, 3000);
+                // Update header with checkmark
+                const headerElement = chapterElement.querySelector('.chapter-header');
+                if (headerElement && !headerElement.querySelector('.completion-check')) {
+                    const checkmark = document.createElement('span');
+                    checkmark.className = 'completion-check';
+                    checkmark.textContent = '✓';
+                    headerElement.appendChild(checkmark);
+                }
 
-        // Optionally move to next chapter after a delay
-        if (data.progress && data.progress.completed_chapters) {
+                // Update submit button
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.textContent = 'Completed';
+                    submitButton.classList.add('completed');
+                }
+            }
+
+            // Update progress bar if it exists
+            if (data.progress && data.progress.progress_percentage !== undefined) {
+                const progressFill = document.querySelector('.progress-bar');
+                const progressText = document.querySelector('.progress-text');
+                if (progressFill && progressText) {
+                    const percentage = data.progress.progress_percentage;
+                    progressFill.style.width = `${percentage}%`;
+                    progressText.textContent = `${Math.round(percentage)}% Complete`;
+                }
+            }
+
+            // Show success message
+            const messageContainer = document.createElement('div');
+            messageContainer.className = 'success-message';
+            messageContainer.textContent = `Chapter ${chapterNumber} completed successfully!`;
+            chapterElement.appendChild(messageContainer);
+
+            // Remove success message after 3 seconds
             setTimeout(() => {
-                nextChapter(chapterNumber);
-            }, 1500);
-        }
+                messageContainer.remove();
+            }, 3000);
 
-    } catch (error) {
-        console.error('Error submitting chapter:', error);
+            // Optionally move to next chapter after a delay
+            if (data.progress && data.progress.completed_chapters) {
+                setTimeout(() => {
+                    nextChapter(chapterNumber);
+                }, 1500);
+            }
 
-        // Reset submit button if it exists
-        const chapterElement = document.querySelector(`[data-chapter="${chapterNumber}"]`);
-        const submitButton = chapterElement?.querySelector('.submit-btn');
-        if (submitButton) {
-            submitButton.disabled = false;
-            submitButton.textContent = 'Submit';
-        }
+        } catch (error) {
+            console.error('Error submitting chapter:', error);
 
-        // Show error message
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'error-message';
-        errorMessage.textContent = `Error: ${error.message}. Please try again.`;
+            // Reset submit button if it exists
+            const chapterElement = document.querySelector(`[data-chapter="${chapterNumber}"]`);
+            const submitButton = chapterElement?.querySelector('.submit-btn');
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit';
+            }
 
-        if (chapterElement) {
-            chapterElement.appendChild(errorMessage);
-            setTimeout(() => errorMessage.remove(), 3000);
+            // Show error message
+            const errorMessage = document.createElement('div');
+            errorMessage.className = 'error-message';
+            errorMessage.textContent = `Error: ${error.message}. Please try again.`;
+
+            if (chapterElement) {
+                chapterElement.appendChild(errorMessage);
+                setTimeout(() => errorMessage.remove(), 3000);
+            }
         }
     }
-}
 
-// Add these styles to ensure proper UI feedback
-const styles = `
+    // Add these styles to ensure proper UI feedback
+    const styles = `
     .submit-btn {
         position: relative;
         transition: all 0.3s ease;
@@ -423,33 +427,33 @@ const styles = `
     }
 `;
 
-// Add styles to document
-if (!document.getElementById('chapter-submission-styles')) {
-    const styleSheet = document.createElement('style');
-    styleSheet.id = 'chapter-submission-styles';
-    styleSheet.textContent = styles;
-    document.head.appendChild(styleSheet);
-}
+    // Add styles to document
+    if (!document.getElementById('chapter-submission-styles')) {
+        const styleSheet = document.createElement('style');
+        styleSheet.id = 'chapter-submission-styles';
+        styleSheet.textContent = styles;
+        document.head.appendChild(styleSheet);
+    }
 
-// Add these new functions:
-function updateProgress() {
-    const totalChapters = document.querySelectorAll('.chapter-item').length;
-    const submittedChapters = document.querySelectorAll('.chapter-item.submitted').length;
-    const progressPercentage = Math.round((submittedChapters / totalChapters) * 100);
+    // Add these new functions:
+    function updateProgress() {
+        const totalChapters = document.querySelectorAll('.chapter-item').length;
+        const submittedChapters = document.querySelectorAll('.chapter-item.submitted').length;
+        const progressPercentage = Math.round((submittedChapters / totalChapters) * 100);
 
-    const progressFill = document.querySelector('.progress-bar');
-    const progressText = document.querySelector('.progress-text');
+        const progressFill = document.querySelector('.progress-bar');
+        const progressText = document.querySelector('.progress-text');
 
-    progressFill.style.width = `${progressPercentage}%`;
-    progressText.textContent = `${progressPercentage}% Complete`;
-}
+        progressFill.style.width = `${progressPercentage}%`;
+        progressText.textContent = `${progressPercentage}% Complete`;
+    }
 
-// Update the submitChapter function
-async function loadCourseDetails(language) {
-    currentCourseLanguage = language;
-    try {
-        // Add progress bar at the start
-        const progressHTML = `
+    // Update the submitChapter function
+    async function loadCourseDetails(language) {
+        currentCourseLanguage = language;
+        try {
+            // Add progress bar at the start
+            const progressHTML = `
             <div class="progress-container">
                 <div class="progress-bar" style="width: 0%; background: green; height: 16px; border-radius: 12px;">
                     <div class="progress-fill"></div>
@@ -458,58 +462,58 @@ async function loadCourseDetails(language) {
             </div>
         `;
 
-        // Insert progress bar if it doesn't exist
-        if (!document.querySelector('.progress-container')) {
-            document.querySelector('.popup-header').insertAdjacentHTML('afterend', progressHTML);
-        }
+            // Insert progress bar if it doesn't exist
+            if (!document.querySelector('.progress-container')) {
+                document.querySelector('.popup-header').insertAdjacentHTML('afterend', progressHTML);
+            }
 
-        // Fetch user's progress first
-        const progressResponse = await fetch(`/api/get_user_progress/${language}`);
-        if (!progressResponse.ok) {
-            throw new Error('Failed to fetch user progress');
-        }
-        const progressData = await progressResponse.json();
+            // Fetch user's progress first
+            const progressResponse = await fetch(`/api/get_user_progress/${language}`);
+            if (!progressResponse.ok) {
+                throw new Error('Failed to fetch user progress');
+            }
+            const progressData = await progressResponse.json();
 
-        // Update progress bar immediately
-        const progressFill = document.querySelector('.progress-bar');
-        const progressText = document.querySelector('.progress-text');
-        if (progressFill && progressText) {
-            progressFill.style.width = `${progressData.progress_percentage}%`;
-            progressText.textContent = `${Math.round(progressData.progress_percentage)}% Complete`;
-        }
+            // Update progress bar immediately
+            const progressFill = document.querySelector('.progress-bar');
+            const progressText = document.querySelector('.progress-text');
+            if (progressFill && progressText) {
+                progressFill.style.width = `${progressData.progress_percentage}%`;
+                progressText.textContent = `${Math.round(progressData.progress_percentage)}% Complete`;
+            }
 
-        // Fetch course details
-        const response = await fetch(`/get_course_details?language=${encodeURIComponent(language)}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch course details');
-        }
-        const courseData = await response.json();
+            // Fetch course details
+            const response = await fetch(`/get_course_details?language=${encodeURIComponent(language)}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch course details');
+            }
+            const courseData = await response.json();
 
-        // Update course info
-        const courseInfoTitle = document.querySelector('.course-info h2');
-        const courseInfoDesc = document.querySelector('.course-info p');
+            // Update course info
+            const courseInfoTitle = document.querySelector('.course-info h2');
+            const courseInfoDesc = document.querySelector('.course-info p');
 
-        if (courseInfoTitle) {
-            courseInfoTitle.textContent = `Complete ${language} Masterclass`;
-        }
-        if (courseInfoDesc) {
-            courseInfoDesc.textContent = courseData.description || 'Learn programming with our structured curriculum.';
-        }
+            if (courseInfoTitle) {
+                courseInfoTitle.textContent = `Complete ${language} Masterclass`;
+            }
+            if (courseInfoDesc) {
+                courseInfoDesc.textContent = courseData.description || 'Learn programming with our structured curriculum.';
+            }
 
-        // Clear and update chapters
-        const chaptersContainer = document.getElementById('course-details');
-        if (chaptersContainer) {
-            const accordion = chaptersContainer.querySelector('.chapter-accordion');
-            if (accordion) {
-                accordion.innerHTML = '';
+            // Clear and update chapters
+            const chaptersContainer = document.getElementById('course-details');
+            if (chaptersContainer) {
+                const accordion = chaptersContainer.querySelector('.chapter-accordion');
+                if (accordion) {
+                    accordion.innerHTML = '';
 
-                // Handle the chapters
-                if (courseData.chapters && Array.isArray(courseData.chapters)) {
-                    courseData.chapters.forEach((chapter, index) => {
-                        const chapterNumber = index + 1;
-                        const isCompleted = progressData.completed_chapters.includes(chapterNumber);
+                    // Handle the chapters
+                    if (courseData.chapters && Array.isArray(courseData.chapters)) {
+                        courseData.chapters.forEach((chapter, index) => {
+                            const chapterNumber = index + 1;
+                            const isCompleted = progressData.completed_chapters.includes(chapterNumber);
 
-                        const chapterHTML = `
+                            const chapterHTML = `
                             <div class="chapter-item ${isCompleted ? 'submitted' : ''}" data-chapter="${chapterNumber}">
                                 <div class="chapter-header" onclick="toggleChapter(this)">
                                     <h4 class="chapter-title">Chapter ${chapterNumber}: ${chapter.title || 'Untitled Chapter'}</h4>
@@ -533,12 +537,12 @@ async function loadCourseDetails(language) {
                                 </div>
                             </div>
                         `;
-                        accordion.innerHTML += chapterHTML;
-                    });
-                }
+                            accordion.innerHTML += chapterHTML;
+                        });
+                    }
 
-                // Add styles for the disabled submit button
-                const submitButtonStyles = `
+                    // Add styles for the disabled submit button
+                    const submitButtonStyles = `
                     .submit-btn[disabled] {
                         background-color: #e2e8f0;
                         cursor: not-allowed;
@@ -549,135 +553,135 @@ async function loadCourseDetails(language) {
                         color: white;
                     }
                 `;
-                const styleSheet = document.createElement('style');
-                styleSheet.textContent = submitButtonStyles;
-                document.head.appendChild(styleSheet);
+                    const styleSheet = document.createElement('style');
+                    styleSheet.textContent = submitButtonStyles;
+                    document.head.appendChild(styleSheet);
+                }
             }
-        }
 
-        // Initialize syntax highlighting
-        document.querySelectorAll('pre code').forEach((block) => {
-            hljs.highlightElement(block);
-        });
+            // Initialize syntax highlighting
+            document.querySelectorAll('pre code').forEach((block) => {
+                hljs.highlightElement(block);
+            });
 
-        // Open the last accessed chapter if available
-        if (progressData.last_accessed_chapter) {
-            const lastChapter = document.querySelector(`[data-chapter="${progressData.last_accessed_chapter}"]`);
-            if (lastChapter) {
-                const header = lastChapter.querySelector('.chapter-header');
-                toggleChapter(header);
+            // Open the last accessed chapter if available
+            if (progressData.last_accessed_chapter) {
+                const lastChapter = document.querySelector(`[data-chapter="${progressData.last_accessed_chapter}"]`);
+                if (lastChapter) {
+                    const header = lastChapter.querySelector('.chapter-header');
+                    toggleChapter(header);
+                }
             }
-        }
 
-    } catch (error) {
-        console.error('Error loading course details:', error);
-        const courseInfo = document.querySelector('.course-info');
-        if (courseInfo) {
-            courseInfo.innerHTML = `
+        } catch (error) {
+            console.error('Error loading course details:', error);
+            const courseInfo = document.querySelector('.course-info');
+            if (courseInfo) {
+                courseInfo.innerHTML = `
                 <h2>Error Loading Course</h2>
                 <p>Sorry, we couldn't load the course details. Please try again later.</p>
             `;
-        }
-    }
-}
-
-function nextChapter(chapterNumber) {
-    const currentChapter = document.querySelector(`[data-chapter="${chapterNumber}"]`);
-    toggleChapter(currentChapter.querySelector('.chapter-header'));
-
-    if (chapterNumber < document.querySelectorAll('.chapter-item').length) {
-        const nextChapter = document.querySelector(`[data-chapter="${chapterNumber + 1}"]`);
-        toggleChapter(nextChapter.querySelector('.chapter-header'));
-    }
-}
-
-// Update the showPopup function to accept language parameter
-function showPopup(language) {
-    const popup = document.getElementById('course-popup');
-    if (popup) {
-        popup.style.display = 'block';
-        loadCourseDetails(language);
-    }
-}
-
-
-function closePopup() {
-    document.getElementById('course-popup').style.display = 'none';
-}
-
-function toggleChapter(headerElement) {
-    // Check if we received the header element directly
-    const header = headerElement.classList?.contains('chapter-header') ?
-        headerElement :
-        headerElement.closest('.chapter-header');
-
-    // Validate that we have a proper header element
-    if (!header) {
-        console.error('Invalid header element provided to toggleChapter');
-        return;
-    }
-
-    // Get the content and icon elements
-    const content = header.nextElementSibling;
-    const icon = header.querySelector('.dropdown-icon');
-
-    if (!content || !icon) {
-        console.error('Missing required chapter elements');
-        return;
-    }
-
-    // Close all other chapters first
-    const allChapters = document.querySelectorAll('.chapter-item');
-    allChapters.forEach(chapter => {
-        const otherContent = chapter.querySelector('.chapter-content');
-        const otherIcon = chapter.querySelector('.dropdown-icon');
-
-        // Skip the current chapter
-        if (otherContent !== content) {
-            otherContent?.classList.remove('open');
-            otherIcon?.classList.remove('open');
-        }
-    });
-
-    // Toggle current chapter
-    content.classList.toggle('open');
-    icon.classList.toggle('open');
-
-    // Scroll the content into view if opening
-    if (content.classList.contains('open')) {
-        content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Existing chat functionality remains the same
-    const messageInput = document.getElementById('user-message');
-    const sendButton = document.querySelector('button');
-    const chatMessages = document.getElementById('chat-messages');
-    const sidebar = document.getElementById('course-sidebar');
-    const coursesList = document.getElementById('courses-list');
-
-    // Function to load user courses
-    async function loadUserCourses() {
-        try {
-            const response = await fetch('/api/get_user_courses');
-            if (!response.ok) throw new Error('Failed to fetch courses');
-
-            const data = await response.json();
-            if (data.courses && data.courses.length > 0) {
-                sidebar.classList.remove('hidden');
-                renderCourses(data.courses);
-            } else {
-                sidebar.classList.add('hidden');
             }
-        } catch (error) {
-            console.error('Error loading courses:', error);
         }
     }
 
-    // Function to render courses in sidebar
-    function renderCourses(courses) {
-        coursesList.innerHTML = courses.map(course => `
+    function nextChapter(chapterNumber) {
+        const currentChapter = document.querySelector(`[data-chapter="${chapterNumber}"]`);
+        toggleChapter(currentChapter.querySelector('.chapter-header'));
+
+        if (chapterNumber < document.querySelectorAll('.chapter-item').length) {
+            const nextChapter = document.querySelector(`[data-chapter="${chapterNumber + 1}"]`);
+            toggleChapter(nextChapter.querySelector('.chapter-header'));
+        }
+    }
+
+    // Update the showPopup function to accept language parameter
+    function showPopup(language) {
+        const popup = document.getElementById('course-popup');
+        if (popup) {
+            popup.style.display = 'block';
+            loadCourseDetails(language);
+        }
+    }
+
+
+    function closePopup() {
+        document.getElementById('course-popup').style.display = 'none';
+    }
+
+    function toggleChapter(headerElement) {
+        // Check if we received the header element directly
+        const header = headerElement.classList?.contains('chapter-header') ?
+            headerElement :
+            headerElement.closest('.chapter-header');
+
+        // Validate that we have a proper header element
+        if (!header) {
+            console.error('Invalid header element provided to toggleChapter');
+            return;
+        }
+
+        // Get the content and icon elements
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('.dropdown-icon');
+
+        if (!content || !icon) {
+            console.error('Missing required chapter elements');
+            return;
+        }
+
+        // Close all other chapters first
+        const allChapters = document.querySelectorAll('.chapter-item');
+        allChapters.forEach(chapter => {
+            const otherContent = chapter.querySelector('.chapter-content');
+            const otherIcon = chapter.querySelector('.dropdown-icon');
+
+            // Skip the current chapter
+            if (otherContent !== content) {
+                otherContent?.classList.remove('open');
+                otherIcon?.classList.remove('open');
+            }
+        });
+
+        // Toggle current chapter
+        content.classList.toggle('open');
+        icon.classList.toggle('open');
+
+        // Scroll the content into view if opening
+        if (content.classList.contains('open')) {
+            content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Existing chat functionality remains the same
+        const messageInput = document.getElementById('user-message');
+        const sendButton = document.getElementById('chat-send-btn');
+        const chatMessages = document.getElementById('chat-messages');
+        const sidebar = document.getElementById('course-sidebar');
+        const coursesList = document.getElementById('courses-list');
+
+        // Function to load user courses
+        async function loadUserCourses() {
+            try {
+                const response = await fetch('/api/get_user_courses');
+                if (!response.ok) throw new Error('Failed to fetch courses');
+
+                const data = await response.json();
+                if (data.courses && data.courses.length > 0) {
+                    sidebar.classList.remove('hidden');
+                    renderCourses(data.courses);
+                } else {
+                    sidebar.classList.add('hidden');
+                }
+            } catch (error) {
+                console.error('Error loading courses:', error);
+            }
+        }
+
+        // Function to render courses in sidebar
+        function renderCourses(courses) {
+            coursesList.innerHTML = courses.map(course => `
             <div
                 onclick="showPopup('${course.language}')"
                 class="cursor-pointer group hover:bg-blue-50 rounded-lg p-3 transition-all"
@@ -708,120 +712,121 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             </div>
         `).join('');
-    }
-
-    // Modified updateProgress function
-    function updateProgress() {
-        const progressBar = document.querySelector('.progress-fill');
-        const progressText = document.querySelector('.progress-text');
-
-        if (progressBar && progressText) {
-            const totalChapters = document.querySelectorAll('.chapter-item').length;
-            const submittedChapters = document.querySelectorAll('.chapter-item.submitted').length;
-            const progressPercentage = Math.round((submittedChapters / totalChapters) * 100);
-
-            progressBar.style.width = `${progressPercentage}%`;
-            progressText.textContent = `${progressPercentage}% Complete`;
-
-            // Refresh sidebar after progress update
-            loadUserCourses();
         }
-    }
 
-    // Load courses when the page loads
-    loadUserCourses();
+        // Modified updateProgress function
+        function updateProgress() {
+            const progressBar = document.querySelector('.progress-fill');
+            const progressText = document.querySelector('.progress-text');
 
-    function sendMessage() {
-        const userMessage = messageInput.value.trim();
+            if (progressBar && progressText) {
+                const totalChapters = document.querySelectorAll('.chapter-item').length;
+                const submittedChapters = document.querySelectorAll('.chapter-item.submitted').length;
+                const progressPercentage = Math.round((submittedChapters / totalChapters) * 100);
 
-        if (userMessage) {
-            appendMessage('user', userMessage);
-            showTypingIndicator();
+                progressBar.style.width = `${progressPercentage}%`;
+                progressText.textContent = `${progressPercentage}% Complete`;
 
-            fetch('/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message: userMessage })
-            })
-            .then(response => response.json())
-            .then(data => {
-                removeTypingIndicator();
-
-                if (typeof data === 'object') {
-                    if (data.response) {
-                        appendMessage('bot', data.response);
-                    }
-                    if (data.follow_up) {
-                        appendMessage('bot', data.follow_up);
-                    }
-                    if (data.start_course && data.language) {
-                        showPopup(data.language); // Pass the language to showPopup
-                    }
-                    if (data.code) {
-                        appendCodeView(data.language || 'Code', data.code);
-                    }
-                } else {
-                    appendMessage('bot', data);
-                }
-
-                messageInput.value = '';
-            })
-            .catch(error => {
-                removeTypingIndicator();
-                console.error('Error:', error);
-                appendMessage('bot', 'Sorry, there was an error processing your message.');
-            });
+                // Refresh sidebar after progress update
+                loadUserCourses();
+            }
         }
-    }
 
-    sendButton.addEventListener('click', sendMessage);
-    messageInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            sendMessage();
+        // Load courses when the page loads
+        loadUserCourses();
+
+        function sendMessage() {
+            const userMessage = messageInput.value.trim();
+
+            if (userMessage) {
+                appendMessage('user', userMessage);
+                showTypingIndicator();
+
+                fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').content
+                    },
+                    body: JSON.stringify({ message: userMessage })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        removeTypingIndicator();
+
+                        if (typeof data === 'object') {
+                            if (data.response) {
+                                appendMessage('bot', data.response);
+                            }
+                            if (data.follow_up) {
+                                appendMessage('bot', data.follow_up);
+                            }
+                            if (data.start_course && data.language) {
+                                showPopup(data.language); // Pass the language to showPopup
+                            }
+                            if (data.code) {
+                                appendCodeView(data.language || 'Code', data.code);
+                            }
+                        } else {
+                            appendMessage('bot', data);
+                        }
+
+                        messageInput.value = '';
+                    })
+                    .catch(error => {
+                        removeTypingIndicator();
+                        console.error('Error:', error);
+                        appendMessage('bot', 'Sorry, there was an error processing your message.');
+                    });
+            }
         }
-    });
 
-    function showTypingIndicator() {
-        const typingIndicator = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
-        chatMessages.innerHTML += typingIndicator;
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+        sendButton.addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
 
-    function removeTypingIndicator() {
-        const typingIndicator = chatMessages.querySelector('.typing-indicator');
-        if (typingIndicator) {
-            typingIndicator.remove();
+        function showTypingIndicator() {
+            const typingIndicator = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+            chatMessages.innerHTML += typingIndicator;
+            chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-    }
 
-    function appendMessage(sender, message) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message', `message-${sender}`);
+        function removeTypingIndicator() {
+            const typingIndicator = chatMessages.querySelector('.typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
 
-        const messageContent = document.createElement('div');
-        messageContent.classList.add('message-content');
-        messageContent.textContent = message;
+        function appendMessage(sender, message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', `message-${sender}`);
 
-        messageElement.appendChild(messageContent);
-        chatMessages.appendChild(messageElement);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+            const messageContent = document.createElement('div');
+            messageContent.classList.add('message-content');
+            messageContent.textContent = message;
 
-    function appendCodeView(language, code) {
-        const codeViewElement = document.createElement('div');
-        codeViewElement.classList.add('code-view');
-        codeViewElement.innerHTML = `
+            messageElement.appendChild(messageContent);
+            chatMessages.appendChild(messageElement);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function appendCodeView(language, code) {
+            const codeViewElement = document.createElement('div');
+            codeViewElement.classList.add('code-view');
+            codeViewElement.innerHTML = `
             <div class="code-header">
                 <h3>${language} Code Preview</h3>
             </div>
             <pre><code>${code}</code></pre>`;
 
-        chatMessages.appendChild(codeViewElement);
-    }
-    updateProgress();
-});
+            chatMessages.appendChild(codeViewElement);
+        }
+        updateProgress();
+    });
 </script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
