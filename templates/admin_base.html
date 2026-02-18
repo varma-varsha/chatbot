@@ -12,14 +12,26 @@
 </head>
 
 <body class="bg-gray-100">
+    <!-- Mobile Overlay -->
+    <div id="sidebar-overlay"
+        class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden transition-opacity duration-300 opacity-0"
+        onclick="toggleSidebar()"></div>
+
     <div class="flex h-screen overflow-hidden">
         <!-- Admin Sidebar -->
-        <div class="w-64 bg-white shadow-lg border-r border-gray-200 flex-shrink-0 flex flex-col">
-            <div class="p-6 border-b border-gray-200">
-                <div class="flex items-center space-x-2">
-                    <div class="text-blue-600 text-2xl font-bold">OneLearn</div>
+        <div id="admin-sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg border-r border-gray-200 flex-shrink-0 flex flex-col transform -translate-x-full transition-transform duration-300 lg:translate-x-0 lg:static lg:inset-auto">
+            <div class="p-6 border-b border-gray-200 flex justify-between items-center">
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <div class="text-blue-600 text-2xl font-bold">OneLearn</div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-semibold">Admin Portal</p>
                 </div>
-                <p class="text-xs text-gray-500 mt-1 uppercase tracking-wider font-semibold">Admin Portal</p>
+                <!-- Mobile Close Button -->
+                <button class="lg:hidden text-gray-500 hover:text-red-500 focus:outline-none" onclick="toggleSidebar()">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
             </div>
 
             <nav class="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
@@ -76,7 +88,7 @@
         <div class="flex-1 flex flex-col h-screen overflow-hidden">
             <!-- Top Header (Optional, mostly for mobile menu mainly) -->
             <header class="bg-white shadow-sm h-16 flex items-center px-6 lg:hidden">
-                <button class="text-gray-500 focus:outline-none lg:hidden">
+                <button class="text-gray-500 focus:outline-none lg:hidden" onclick="toggleSidebar()">
                     <i class="fas fa-bars text-2xl"></i>
                 </button>
                 <span class="ml-4 text-lg font-semibold text-gray-800">Admin Portal</span>
@@ -102,6 +114,29 @@
             </main>
         </div>
     </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('admin-sidebar');
+            const overlay = document.getElementById('sidebar-overlay');
+
+            if (sidebar.classList.contains('-translate-x-full')) {
+                // Open sidebar
+                sidebar.classList.remove('-translate-x-full');
+                overlay.classList.remove('hidden');
+                setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                }, 10);
+            } else {
+                // Close sidebar
+                sidebar.classList.add('-translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300);
+            }
+        }
+    </script>
 </body>
 
 </html>
