@@ -31,21 +31,18 @@
     </div>
 </div>
 
-<div class="container" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
-    <div class="header-section" style="margin-bottom: 40px; text-align: center;">
-        <h1
-            style="font-size: 3rem; color: #2c3e50; margin-bottom: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-            Adaptive Learning</h1>
-        <p style="font-size: 1.3rem; color: #7f8c8d;">Personalized learning paths tailored to your pace</p>
+<div class="container learning-container">
+    <div class="header-section learning-header">
+        <h1>Adaptive Learning</h1>
+        <p>Personalized learning paths tailored to your pace</p>
     </div>
 
-    <div class="intro-card"
-        style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; color: white; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);">
-        <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
-            <div style="font-size: 5rem; flex-shrink: 0;">🎓</div>
-            <div style="flex: 1;">
-                <h2 style="margin: 0 0 15px 0; font-size: 2rem; color: white;">Smart Learning Paths</h2>
-                <p style="margin: 0; font-size: 1.1rem; line-height: 1.6; opacity: 0.95; color: white;">
+    <div class="intro-card">
+        <div class="intro-content">
+            <div class="intro-icon">🎓</div>
+            <div class="intro-text" style="flex: 1;">
+                <h2>Smart Learning Paths</h2>
+                <p>
                     Our AI analyzes your learning style and progress to recommend the perfect courses for you.
                     Start from the basics or jump to advanced topics - we adapt to your pace.
                 </p>
@@ -55,25 +52,24 @@
 
     <h2 style="color: #2c3e50; margin-bottom: 30px; font-size: 2rem;">Available Courses</h2>
 
-    <div id="courses-grid"
-        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; margin-bottom: 40px;">
+    <div id="courses-grid" class="courses-grid">
         <!-- Courses will be dynamically inserted here -->
     </div>
 
-    <div class="features-section" style="background: #f8f9fa; padding: 40px; border-radius: 20px; margin-top: 40px;">
+    <div class="features-section">
         <h2 style="color: #2c3e50; margin-bottom: 30px; text-align: center;">Why Adaptive Learning Works</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
-            <div style="text-align: center; padding: 20px;">
+        <div class="features-grid">
+            <div class="feature-box">
                 <div style="font-size: 3rem; margin-bottom: 15px;">🎯</div>
                 <h3 style="color: #667eea; margin-bottom: 10px;">Goal-Oriented</h3>
                 <p style="color: #7f8c8d;">Learn at your own pace with personalized recommendations</p>
             </div>
-            <div style="text-align: center; padding: 20px;">
+            <div class="feature-box">
                 <div style="font-size: 3rem; margin-bottom: 15px;">📊</div>
                 <h3 style="color: #667eea; margin-bottom: 10px;">Progress Tracking</h3>
                 <p style="color: #7f8c8d;">Monitor your advancement with real-time analytics</p>
             </div>
-            <div style="text-align: center; padding: 20px;">
+            <div class="feature-box">
                 <div style="font-size: 3rem; margin-bottom: 15px;">🚀</div>
                 <h3 style="color: #667eea; margin-bottom: 10px;">Flexible Learning</h3>
                 <p style="color: #7f8c8d;">Switch between courses and topics as needed</p>
@@ -111,7 +107,7 @@
             }
 
             coursesGrid.innerHTML = courses.map(lang => `
-            <div style="background: white; border: 2px solid #e0e0e0; border-radius: 15px; padding: 30px; transition: all 0.3s; cursor: pointer; hover: transform: translateY(-5px); hover: box-shadow: 0 10px 25px rgba(0,0,0,0.1);" onclick="startCourse('${lang}')">
+            <div class="course-card" onclick="startCourse('${lang}')">
                 <div style="font-size: 4rem; text-align: center; margin-bottom: 20px;">${getLanguageIcon(lang)}</div>
                 <h3 style="text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 1.5rem;">${lang}</h3>
                 <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">Start your ${lang} journey</p>

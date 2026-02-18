@@ -37,15 +37,20 @@
                     <i class="fas fa-sun"></i>
                     <span class="theme-text">Switch Theme</span>
                 </button>
-                <a href="{{ url_for('index') }}"><button class="btn-primary">Home</button></a>
+                <a href="{{ url_for('index') }}"><button class="btn-primary"><i class="fas fa-home"></i>
+                        Home</button></a>
                 {% if current_user.is_authenticated %}
                 {% if current_user.role == 'admin' %}
-                <a href="{{ url_for('admin_dashboard') }}"><button class="btn-primary">Admin Portal</button></a>
+                <a href="{{ url_for('admin_dashboard') }}"><button class="btn-primary"><i class="fas fa-shield-alt"></i>
+                        Admin Portal</button></a>
                 {% endif %}
-                <a href="{{ url_for('logout') }}"><button class="btn-login">Logout</button></a>
+                <a href="{{ url_for('logout') }}"><button class="btn-login"><i class="fas fa-sign-out-alt"></i>
+                        Logout</button></a>
                 {% else %}
-                <a href="{{ url_for('login') }}"> <button class="btn-login">Login</button></a>
-                <a href="{{ url_for('signup') }}"><button class="btn-primary">Get Started</button></a>
+                <a href="{{ url_for('login') }}"> <button class="btn-login"><i class="fas fa-sign-in-alt"></i>
+                        Login</button></a>
+                <a href="{{ url_for('signup') }}"><button class="btn-primary"><i class="fas fa-rocket"></i> Get
+                        Started</button></a>
                 <!-- Hidden Admin Signup for convenience/testing -->
                 <!-- <a href="{{ url_for('admin_signup') }}" style="display:none;">Admin</a> -->
                 {% endif %}

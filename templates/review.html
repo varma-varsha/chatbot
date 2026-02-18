@@ -29,19 +29,20 @@
     </div>
 </div>
 
-<div class="container" style="max-width: 1200px; margin: 40px auto; padding: 20px;">
-    <div class="header-section" style="margin-bottom: 40px; text-align: center;">
-        <h1 style="font-size: 3rem; color: #2c3e50; margin-bottom: 15px;">🔄 Smart Review</h1>
-        <p style="font-size: 1.3rem; color: #7f8c8d;">Reinforce your knowledge with targeted practice</p>
+<div class="container learning-container">
+    <div class="header-section review-header">
+        <h1>🔄 Smart Review</h1>
+        <p>Reinforce your knowledge with targeted practice</p>
     </div>
 
-    <div class="intro-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); padding: 40px; border-radius: 20px; color: white; margin-bottom: 40px; box-shadow: 0 10px 30px rgba(67, 233, 123, 0.3);">
-        <div style="display: flex; align-items: center; gap: 30px; flex-wrap: wrap;">
-            <div style="font-size: 5rem; flex-shrink: 0;">🧠</div>
-            <div style="flex: 1;">
-                <h2 style="margin: 0 0 15px 0; font-size: 2rem; color: white;">Spaced Repetition Learning</h2>
-                <p style="margin: 0; font-size: 1.1rem; line-height: 1.6; opacity: 0.95; color: white;">
-                    Our smart review system uses proven spaced repetition techniques to help you retain information longer. 
+    <div class="intro-card review-intro">
+        <div class="intro-content">
+            <div class="intro-icon">🧠</div>
+            <div class="intro-text" style="flex: 1;">
+                <h2>Spaced Repetition Learning</h2>
+                <p>
+                    Our smart review system uses proven spaced repetition techniques to help you retain information
+                    longer.
                     Review concepts at optimal intervals to maximize your learning efficiency.
                 </p>
             </div>
@@ -49,37 +50,39 @@
     </div>
 
     <h2 style="color: #2c3e50; margin-bottom: 30px; font-size: 2rem;">Your Review Queue</h2>
-    
-    <div id="review-queue" style="display: grid; gap: 20px; margin-bottom: 40px;">
+
+    <div id="review-queue" class="review-queue">
         <!-- Review items will be dynamically inserted here -->
-        <div style="text-align: center; padding: 60px 20px; background: white; border: 2px dashed #e0e0e0; border-radius: 15px;">
+        <div
+            style="text-align: center; padding: 60px 20px; background: white; border: 2px dashed #e0e0e0; border-radius: 15px;">
             <div style="font-size: 4rem; margin-bottom: 20px;">📝</div>
             <h3 style="margin-bottom: 10px; color: #2c3e50;">No reviews scheduled</h3>
             <p style="color: #7f8c8d; margin-bottom: 20px;">Complete more chapters to get review items</p>
-            <a href="{{ url_for('learning') }}" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 50px;">
+            <a href="{{ url_for('learning') }}"
+                style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; text-decoration: none; border-radius: 50px;">
                 Start Learning
             </a>
         </div>
     </div>
 
-    <div class="review-methods" style="background: #f8f9fa; padding: 40px; border-radius: 20px; margin-bottom: 40px;">
+    <div class="review-methods">
         <h2 style="color: #2c3e50; margin-bottom: 30px; text-align: center;">How Smart Review Works</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px;">
-            <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+        <div class="methods-grid">
+            <div class="method-box">
                 <div style="font-size: 3rem; text-align: center; margin-bottom: 15px;">⏰</div>
                 <h3 style="color: #43e97b; margin-bottom: 10px; text-align: center;">Optimal Timing</h3>
                 <p style="color: #7f8c8d; text-align: center; line-height: 1.6;">
                     Reviews are scheduled at scientifically-proven intervals to maximize retention
                 </p>
             </div>
-            <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <div class="method-box">
                 <div style="font-size: 3rem; text-align: center; margin-bottom: 15px;">🎯</div>
                 <h3 style="color: #43e97b; margin-bottom: 10px; text-align: center;">Targeted Practice</h3>
                 <p style="color: #7f8c8d; text-align: center; line-height: 1.6;">
                     Focus on topics you find challenging with personalized review sessions
                 </p>
             </div>
-            <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+            <div class="method-box">
                 <div style="font-size: 3rem; text-align: center; margin-bottom: 15px;">📊</div>
                 <h3 style="color: #43e97b; margin-bottom: 10px; text-align: center;">Progress Tracking</h3>
                 <p style="color: #7f8c8d; text-align: center; line-height: 1.6;">
@@ -89,64 +92,67 @@
         </div>
     </div>
 
-    <div class="features-section" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px; border-radius: 20px; color: white; margin-bottom: 40px;">
-        <h2 style="margin: 0 0 30px 0; font-size: 2rem; text-align: center;">Review Strategies</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px;">
-            <div style="text-align: center; padding: 20px;">
+    <div class="features-section review-strategies">
+        <h2 style="margin: 0 0 30px 0; font-size: 2rem; text-align: center; color: white;">Review Strategies</h2>
+        <div class="strategies-grid">
+            <div class="strategy-box">
                 <div style="font-size: 2.5rem; margin-bottom: 15px;">✨</div>
                 <h3 style="margin-bottom: 10px;">Quick Refresher</h3>
-                <p style="opacity: 0.9; line-height: 1.6;">5-minute daily reviews to keep concepts fresh</p>
+                <p style="opacity: 0.9; line-height: 1.6; color: white;">5-minute daily reviews to keep concepts fresh
+                </p>
             </div>
-            <div style="text-align: center; padding: 20px;">
+            <div class="strategy-box">
                 <div style="font-size: 2.5rem; margin-bottom: 15px;">💪</div>
                 <h3 style="margin-bottom: 10px;">Deep Practice</h3>
-                <p style="opacity: 0.9; line-height: 1.6;">Focused sessions on difficult topics</p>
+                <p style="opacity: 0.9; line-height: 1.6; color: white;">Focused sessions on difficult topics</p>
             </div>
-            <div style="text-align: center; padding: 20px;">
+            <div class="strategy-box">
                 <div style="font-size: 2.5rem; margin-bottom: 15px;">🏆</div>
                 <h3 style="margin-bottom: 10px;">Achievement Rewards</h3>
-                <p style="opacity: 0.9; line-height: 1.6;">Unlock badges for consistent reviews</p>
+                <p style="opacity: 0.9; line-height: 1.6; color: white;">Unlock badges for consistent reviews</p>
             </div>
         </div>
     </div>
 
     <div class="action-buttons" style="margin-top: 40px; text-align: center;">
-        <a href="{{ url_for('dashboard') }}" style="display: inline-block; padding: 15px 40px; background: #667eea; color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; margin: 0 10px; transition: transform 0.3s;">
+        <a href="{{ url_for('dashboard') }}"
+            style="display: inline-block; padding: 15px 40px; background: #667eea; color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; margin: 0 10px; transition: transform 0.3s;">
             ← Back to Dashboard
         </a>
-        <a href="{{ url_for('progress') }}" style="display: inline-block; padding: 15px 40px; background: #43e97b; color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; margin: 0 10px; transition: transform 0.3s;">
+        <a href="{{ url_for('progress') }}"
+            style="display: inline-block; padding: 15px 40px; background: #43e97b; color: white; text-decoration: none; border-radius: 50px; font-size: 1.1rem; margin: 0 10px; transition: transform 0.3s;">
             View Progress →
         </a>
     </div>
 </div>
 
 <script>
-let currentCourseLanguage = null;
+    let currentCourseLanguage = null;
 
-// Load review data
-async function loadReviewData() {
-    try {
-        const response = await fetch('/api/get_user_courses');
-        const data = await response.json();
-        const courses = data.courses || [];
-        
-        // Filter courses that have progress for review (completed at least one chapter)
-        const coursesToReview = courses.filter(course => 
-            course.progress_percentage > 0 && course.chapters_completed_count > 0
-        );
-        
-        const reviewQueue = document.getElementById('review-queue');
-        
-        if (coursesToReview.length === 0) {
-            return; // Keep the default "no reviews" message
-        }
-        
-        // Show courses that can be reviewed
-        reviewQueue.innerHTML = coursesToReview.map(course => {
-            const lastUpdated = course.last_updated ? new Date(course.last_updated).toLocaleDateString() : 'Not reviewed yet';
-            
-            return `
-                <div style="background: white; border: 2px solid #e0e0e0; border-radius: 15px; padding: 30px; display: flex; justify-content: space-between; align-items: center; transition: all 0.3s;">
+    // Load review data
+    async function loadReviewData() {
+        try {
+            const response = await fetch('/api/get_user_courses');
+            const data = await response.json();
+            const courses = data.courses || [];
+
+            // Filter courses that have progress for review (completed at least one chapter)
+            const coursesToReview = courses.filter(course =>
+                course.progress_percentage > 0 && course.chapters_completed_count > 0
+            );
+
+            const reviewQueue = document.getElementById('review-queue');
+
+            if (coursesToReview.length === 0) {
+                return; // Keep the default "no reviews" message
+            }
+
+            // Show courses that can be reviewed
+            reviewQueue.innerHTML = coursesToReview.map(course => {
+                const lastUpdated = course.last_updated ? new Date(course.last_updated).toLocaleDateString() : 'Not reviewed yet';
+
+                return `
+                <div class="review-card">
                     <div style="flex: 1;">
                         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 15px;">
                             <div style="font-size: 2rem;">📚</div>
@@ -159,97 +165,97 @@ async function loadReviewData() {
                         </div>
                         <p style="color: #7f8c8d; font-size: 0.9rem; margin-top: 5px;">${Math.round(course.progress_percentage)}% complete</p>
                     </div>
-                    <div style="margin-left: 20px;">
+                    <div>
                         <button onclick="startReview('${course.language}')" style="display: inline-block; padding: 12px 30px; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; border: none; border-radius: 50px; font-weight: bold; cursor: pointer; transition: transform 0.3s;">
                             Review →
                         </button>
                     </div>
                 </div>
             `;
-        }).join('');
-        
-    } catch (error) {
-        console.error('Error loading review data:', error);
+            }).join('');
+
+        } catch (error) {
+            console.error('Error loading review data:', error);
+        }
     }
-}
 
-function startReview(language) {
-    showPopup(language);
-}
-
-function showPopup(language) {
-    const popup = document.getElementById('course-popup');
-    if (popup) {
-        popup.style.display = 'block';
-        loadCourseDetails(language);
+    function startReview(language) {
+        showPopup(language);
     }
-}
 
-function closePopup() {
-    document.getElementById('course-popup').style.display = 'none';
-}
-
-function toggleChapter(headerElement) {
-    const header = headerElement.classList?.contains('chapter-header') ?
-        headerElement :
-        headerElement.closest('.chapter-header');
-    
-    if (!header) return;
-    
-    const content = header.nextElementSibling;
-    const icon = header.querySelector('.dropdown-icon');
-    
-    if (!content || !icon) return;
-    
-    // Close all other chapters first
-    const allChapters = document.querySelectorAll('.chapter-item');
-    allChapters.forEach(chapter => {
-        const otherContent = chapter.querySelector('.chapter-content');
-        const otherIcon = chapter.querySelector('.dropdown-icon');
-        
-        if (otherContent !== content) {
-            otherContent?.classList.remove('open');
-            otherIcon?.classList.remove('open');
+    function showPopup(language) {
+        const popup = document.getElementById('course-popup');
+        if (popup) {
+            popup.style.display = 'block';
+            loadCourseDetails(language);
         }
-    });
-    
-    // Toggle current chapter
-    content.classList.toggle('open');
-    icon.classList.toggle('open');
-    
-    if (content.classList.contains('open')) {
-        content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-}
 
-async function loadCourseDetails(language) {
-    currentCourseLanguage = language;
-    
-    try {
-        const response = await fetch(`/get_course_details?language=${encodeURIComponent(language)}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch course details');
+    function closePopup() {
+        document.getElementById('course-popup').style.display = 'none';
+    }
+
+    function toggleChapter(headerElement) {
+        const header = headerElement.classList?.contains('chapter-header') ?
+            headerElement :
+            headerElement.closest('.chapter-header');
+
+        if (!header) return;
+
+        const content = header.nextElementSibling;
+        const icon = header.querySelector('.dropdown-icon');
+
+        if (!content || !icon) return;
+
+        // Close all other chapters first
+        const allChapters = document.querySelectorAll('.chapter-item');
+        allChapters.forEach(chapter => {
+            const otherContent = chapter.querySelector('.chapter-content');
+            const otherIcon = chapter.querySelector('.dropdown-icon');
+
+            if (otherContent !== content) {
+                otherContent?.classList.remove('open');
+                otherIcon?.classList.remove('open');
+            }
+        });
+
+        // Toggle current chapter
+        content.classList.toggle('open');
+        icon.classList.toggle('open');
+
+        if (content.classList.contains('open')) {
+            content.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-        
-        const courseData = await response.json();
-        
-        // Update course info
-        const courseInfoTitle = document.querySelector('.course-info h2');
-        const courseInfoDesc = document.querySelector('.course-info p');
-        
-        if (courseInfoTitle) {
-            courseInfoTitle.textContent = `Review: ${courseData.language} Programming`;
-        }
-        if (courseInfoDesc) {
-            courseInfoDesc.textContent = 'Review the following chapters to reinforce your understanding and improve retention.';
-        }
-        
-        // Clear and update chapters
-        const chaptersContainer = document.getElementById('course-details');
-        const accordion = chaptersContainer.querySelector('.chapter-accordion');
-        
-        if (accordion && courseData.chapters) {
-            accordion.innerHTML = courseData.chapters.map((chapter, index) => `
+    }
+
+    async function loadCourseDetails(language) {
+        currentCourseLanguage = language;
+
+        try {
+            const response = await fetch(`/get_course_details?language=${encodeURIComponent(language)}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch course details');
+            }
+
+            const courseData = await response.json();
+
+            // Update course info
+            const courseInfoTitle = document.querySelector('.course-info h2');
+            const courseInfoDesc = document.querySelector('.course-info p');
+
+            if (courseInfoTitle) {
+                courseInfoTitle.textContent = `Review: ${courseData.language} Programming`;
+            }
+            if (courseInfoDesc) {
+                courseInfoDesc.textContent = 'Review the following chapters to reinforce your understanding and improve retention.';
+            }
+
+            // Clear and update chapters
+            const chaptersContainer = document.getElementById('course-details');
+            const accordion = chaptersContainer.querySelector('.chapter-accordion');
+
+            if (accordion && courseData.chapters) {
+                accordion.innerHTML = courseData.chapters.map((chapter, index) => `
                 <div class="chapter-item">
                     <div class="chapter-header" onclick="toggleChapter(this)">
                         <h4 class="chapter-title">Chapter ${index + 1}: ${chapter.title}</h4>
@@ -266,43 +272,43 @@ async function loadCourseDetails(language) {
                     </div>
                 </div>
             `).join('');
+            }
+
+        } catch (error) {
+            console.error('Error loading course details:', error);
+            alert('Failed to load course details. Please try again.');
         }
-        
-    } catch (error) {
-        console.error('Error loading course details:', error);
-        alert('Failed to load course details. Please try again.');
     }
-}
 
-function markAsReviewed() {
-    if (!currentCourseLanguage) {
-        alert('No course selected');
-        return;
-    }
-    
-    // Update the last reviewed time
-    alert(`Great job! Your progress in ${currentCourseLanguage} has been updated.`);
-    closePopup();
-    
-    // Reload the review data to update the display
-    loadReviewData();
-}
+    function markAsReviewed() {
+        if (!currentCourseLanguage) {
+            alert('No course selected');
+            return;
+        }
 
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// Close popup when clicking outside
-document.addEventListener('click', function(event) {
-    const popup = document.getElementById('course-popup');
-    if (event.target === popup) {
+        // Update the last reviewed time
+        alert(`Great job! Your progress in ${currentCourseLanguage} has been updated.`);
         closePopup();
-    }
-});
 
-// Load data when page loads
-document.addEventListener('DOMContentLoaded', loadReviewData);
+        // Reload the review data to update the display
+        loadReviewData();
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    // Close popup when clicking outside
+    document.addEventListener('click', function (event) {
+        const popup = document.getElementById('course-popup');
+        if (event.target === popup) {
+            closePopup();
+        }
+    });
+
+    // Load data when page loads
+    document.addEventListener('DOMContentLoaded', loadReviewData);
 </script>
 {% endblock %}

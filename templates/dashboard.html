@@ -40,6 +40,11 @@
     </div>
 </div>
 
+<button id="mobile-course-toggle" class="course-sidebar-toggle" aria-label="Toggle Courses" style="display: none;">
+    <i class="fas fa-book"></i>
+</button>
+</div>
+
 <!-- Modal Popup -->
 <div id="course-popup" class="popup-container" style="display: none;">
     <div class="popup-content">
@@ -260,14 +265,45 @@
     }
 
     // Make sure chat container makes space for sidebar
+    // Margin handling moved to CSS for responsiveness
     document.addEventListener('DOMContentLoaded', function () {
-        const chatContainer = document.querySelector('.flex-1.flex.flex-col');
-        if (chatContainer) {
-            chatContainer.style.marginRight = '16rem'; // 256px = 16rem = w-64
-        }
-
         // Load courses when page loads
         loadUserCourses();
+
+        // Mobile Course Toggle
+        const mobileToggle = document.getElementById('mobile-course-toggle');
+        const courseSidebar = document.getElementById('course-sidebar');
+
+        if (mobileToggle) {
+            // Show button only on mobile (handled by CSS, but good to ensure)
+            if (window.innerWidth <= 900) {
+                mobileToggle.style.display = 'flex';
+            }
+
+            mobileToggle.addEventListener('click', () => {
+                courseSidebar.classList.toggle('active');
+            });
+
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', (e) => {
+                if (window.innerWidth <= 900 &&
+                    courseSidebar.classList.contains('active') &&
+                    !courseSidebar.contains(e.target) &&
+                    !mobileToggle.contains(e.target)) {
+                    courseSidebar.classList.remove('active');
+                }
+            });
+
+            // Update button visibility on resize
+            window.addEventListener('resize', () => {
+                if (window.innerWidth <= 900) {
+                    mobileToggle.style.display = 'flex';
+                } else {
+                    mobileToggle.style.display = 'none';
+                    courseSidebar.classList.remove('active'); // Reset state
+                }
+            });
+        }
     });
     async function submitChapter(chapterNumber) {
         try {
