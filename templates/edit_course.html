@@ -121,10 +121,11 @@
         container.appendChild(clone);
     }
 
-    function removeChapter(btn) {
-        if (confirm('Are you sure you want to remove this chapter?')) {
-            btn.closest('.chapter-card').remove();
-        }
+    function removeChapter(button) {
+        showCustomConfirm('Are you sure you want to remove this chapter?', function () {
+            const chapterItem = button.closest('.chapter-card');
+            chapterItem.remove();
+        });
     }
 
     document.getElementById('editCourseForm').addEventListener('submit', async function (e) {

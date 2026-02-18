@@ -118,9 +118,11 @@
     let courseIdToDelete = null;
 
     function confirmDelete(id, name) {
-        courseIdToDelete = id;
-        document.getElementById('deleteCourseName').textContent = name;
-        document.getElementById('deleteModal').classList.remove('hidden');
+        showCustomConfirm(`Are you sure you want to delete the course "${name}"? This action cannot be undone and will remove all associated chapters.`, function () {
+            courseIdToDelete = id;
+            document.getElementById('deleteCourseName').textContent = name;
+            document.getElementById('deleteModal').classList.remove('hidden');
+        });
     }
 
     function closeDeleteModal() {

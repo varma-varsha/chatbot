@@ -134,54 +134,54 @@
         el.classList.toggle('hidden');
     }
 
-    async function deleteError(id) {
-        if (!confirm('Are you sure you want to delete this log?')) return;
+    function deleteError(id) {
+        showCustomConfirm('Are you sure you want to delete this log?', async function () {
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const response = await fetch(`/admin/errors/delete/${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    }
+                });
 
-        try {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const response = await fetch(`/admin/errors/delete/${id}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                const result = await response.json();
+                if (result.success) {
+                    showCustomAlert('Log deleted successfully', 'success');
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    showCustomAlert('Error: ' + result.error, 'error');
                 }
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                showCustomAlert('Log deleted successfully', 'success');
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                showCustomAlert('Error: ' + result.error, 'error');
+            } catch (e) {
+                showCustomAlert('Network error', 'error');
             }
-        } catch (e) {
-            showCustomAlert('Network error', 'error');
-        }
+        });
     }
 
-    async function clearAllErrors() {
-        if (!confirm('Are you sure you want to delete ALL logs? This cannot be undone.')) return;
+    function clearAllErrors() {
+        showCustomConfirm('Are you sure you want to delete ALL logs? This cannot be undone.', async function () {
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                const response = await fetch(`/admin/errors/clear`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrfToken
+                    }
+                });
 
-        try {
-            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const response = await fetch(`/admin/errors/clear`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrfToken
+                const result = await response.json();
+                if (result.success) {
+                    showCustomAlert('All logs cleared successfully', 'success');
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    showCustomAlert('Error: ' + result.error, 'error');
                 }
-            });
-
-            const result = await response.json();
-            if (result.success) {
-                showCustomAlert('All logs cleared successfully', 'success');
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                showCustomAlert('Error: ' + result.error, 'error');
+            } catch (e) {
+                showCustomAlert('Network error', 'error');
             }
-        } catch (e) {
-            showCustomAlert('Network error', 'error');
-        }
+        });
     }
 </script>
 {% endblock %}
