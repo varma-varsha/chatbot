@@ -22,9 +22,20 @@
                     <span class="tagline">Future of Learning</span>
                 </a>
             </div>
+            <button class="menu-toggle" aria-label="Toggle navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <div class="menu-overlay"></div>
             <div class="nav-actions">
+                <div class="sidebar-header">
+                    <span class="sidebar-title">Menu</span>
+                    <button class="close-menu" aria-label="Close navigation"><i class="fas fa-times"></i></button>
+                </div>
                 <button class="theme-toggle" aria-label="Toggle theme">
                     <i class="fas fa-sun"></i>
+                    <span class="theme-text">Switch Theme</span>
                 </button>
                 <a href="{{ url_for('index') }}"><button class="btn-primary">Home</button></a>
                 {% if current_user.is_authenticated %}
@@ -54,7 +65,58 @@
 
             {% block content %}{% endblock %}
         </main>
+
     </div>
+
+    {% if request.path != '/dashboard' %}
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-section brand-section">
+                <div class="logo">OneLearn</div>
+                <p class="footer-tagline">Empowering the future of learning through interactive AI-driven education.
+                </p>
+                <div class="social-links">
+                    <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+
+            <div class="footer-section links-section">
+                <h4>Quick Links</h4>
+                <ul>
+                    <li><a href="{{ url_for('index') }}">Home</a></li>
+                    <li><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                    <li><a href="{{ url_for('learning') }}">Start Learning</a></li>
+                    <li><a href="{{ url_for('review') }}">Review</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section resources-section">
+                <h4>Resources</h4>
+                <ul>
+                    <li><a href="#">Documentation</a></li>
+                    <li><a href="#">API Reference</a></li>
+                    <li><a href="#">Support Center</a></li>
+                    <li><a href="#">Community</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-section legal-section">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 OneLearn. All rights reserved.</p>
+        </div>
+    </footer>
+    {% endif %}
     <script>
         function togglePassword(inputId, iconId) {
             const passwordInput = document.getElementById(inputId);
@@ -76,6 +138,35 @@
             const themeToggle = document.querySelector('.theme-toggle');
             const htmlElement = document.documentElement;
             const themeIcon = themeToggle.querySelector('i');
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navActions = document.querySelector('.nav-actions');
+            const closeMenu = document.querySelector('.close-menu');
+            const menuOverlay = document.querySelector('.menu-overlay');
+
+            function closeSidebar() {
+                navActions.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
+            function openSidebar() {
+                navActions.classList.add('active');
+                menuOverlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            // Mobile menu toggle
+            if (menuToggle) {
+                menuToggle.addEventListener('click', openSidebar);
+            }
+
+            if (closeMenu) {
+                closeMenu.addEventListener('click', closeSidebar);
+            }
+
+            if (menuOverlay) {
+                menuOverlay.addEventListener('click', closeSidebar);
+            }
 
             // Check for saved theme preference, default to light
             const savedTheme = localStorage.getItem('theme') || 'light';

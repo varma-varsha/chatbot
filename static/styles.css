@@ -76,7 +76,12 @@ body {
 }
 
 /* Typography Enhancements */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
     color: var(--text-primary);
     font-weight: 700;
     line-height: 1.3;
@@ -98,7 +103,6 @@ p {
     background: var(--bg-primary);
     border-bottom: 1px solid var(--card-border);
     position: sticky;
-    overflow: hidden;
     top: 0;
     z-index: 1000;
     backdrop-filter: blur(10px);
@@ -121,6 +125,14 @@ p {
     display: flex;
     gap: 1rem;
     align-items: center;
+}
+
+.menu-toggle,
+.close-menu,
+.menu-overlay,
+.sidebar-header,
+.theme-text {
+    display: none;
 }
 
 /* Button Enhancements */
@@ -287,6 +299,141 @@ p {
     .hero .subtitle {
         font-size: 1rem;
     }
+
+    /* Mobile Navigation */
+    .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+        width: 30px;
+        height: 24px;
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        z-index: 2001;
+        padding: 0;
+    }
+
+    .menu-toggle span {
+        width: 6px;
+        height: 6px;
+        background-color: var(--text-primary);
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    /* Backdrop Overlay */
+    .menu-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1999;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+        backdrop-filter: blur(2px);
+    }
+
+    .menu-overlay.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    /* Sidebar Drawer */
+    .nav-actions {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background-color: var(--bg-primary);
+        flex-direction: column;
+        padding: 0;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 4px 0 20px rgba(0, 0, 0, 0.15);
+        z-index: 2000;
+        align-items: stretch;
+        overflow-y: auto;
+        gap: 0.5rem;
+    }
+
+    .nav-actions.active {
+        left: 0;
+    }
+
+    /* Sidebar Header */
+    .sidebar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        border-bottom: 1px solid var(--card-border);
+        margin-bottom: 0.5rem;
+        background-color: var(--bg-secondary);
+    }
+
+    .sidebar-title {
+        font-weight: 800;
+        font-size: 1.25rem;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    .close-menu {
+        display: block;
+        background: transparent;
+        border: none;
+        font-size: 1.5rem;
+        color: var(--text-secondary);
+        cursor: pointer;
+        padding: 0.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .close-menu:hover {
+        color: var(--danger);
+    }
+
+    /* Sidebar Links & Buttons */
+    .nav-actions a {
+        width: auto;
+        margin: 0 1.5rem;
+    }
+
+    .nav-actions button {
+        width: 100%;
+        justify-content: flex-start;
+        text-align: left;
+    }
+
+    /* Theme Toggle in Sidebar */
+    .nav-actions .theme-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 1.5rem;
+        padding: 1rem;
+        width: auto;
+        border-radius: 8px;
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+    }
+
+    .nav-actions .theme-toggle:hover {
+        transform: none;
+        background-color: var(--card-border);
+    }
+
+    .theme-text {
+        font-size: 1rem;
+        font-weight: 500;
+    }
 }
 
 @media (max-width: 480px) {
@@ -391,6 +538,7 @@ p {
 .auth-card a:hover {
     color: var(--primary-dark);
 }
+
 /* Flex Container for Main Layout */
 .flex {
     margin-top: 25px;
@@ -550,7 +698,9 @@ p {
     font-size: 20px;
     color: var(--text-primary);
 }
-.submit-btn, .next-btn {
+
+.submit-btn,
+.next-btn {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -647,6 +797,7 @@ button:hover {
     font-family: monospace;
     align-items: flex-start;
 }
+
 /* Course Info Section */
 .course-info {
     margin-bottom: 1.5rem;
@@ -696,7 +847,8 @@ button:hover {
 }
 
 .chapter-header:hover .dropdown-icon {
-    transform: rotate(180deg); /* Rotate dropdown icon on hover */
+    transform: rotate(180deg);
+    /* Rotate dropdown icon on hover */
 }
 
 .chapter-content {
@@ -798,7 +950,7 @@ button:hover {
     transform: rotate(180deg);
 }
 
-.chapter-header.active + .chapter-content {
+.chapter-header.active+.chapter-content {
     display: block;
 }
 
@@ -833,8 +985,13 @@ h2 {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
 }
 
 .text-center {
@@ -1180,7 +1337,7 @@ button:hover {
     transform: rotate(180deg);
 }
 
-.chapter-header.active + .chapter-content {
+.chapter-header.active+.chapter-content {
     display: block;
 }
 
@@ -1249,6 +1406,7 @@ pre code.hljs {
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -1276,8 +1434,16 @@ pre code.hljs {
 }
 
 @keyframes bounce {
-    0%, 80%, 100% { transform: scale(0); }
-    40% { transform: scale(1); }
+
+    0%,
+    80%,
+    100% {
+        transform: scale(0);
+    }
+
+    40% {
+        transform: scale(1);
+    }
 }
 
 /* Code view styling */
@@ -1300,4 +1466,124 @@ pre code.hljs {
 
 a {
     text-decoration: none;
+}
+
+/* Premium Footer Styles */
+.site-footer {
+    background-color: #111827;
+    /* Dark background */
+    color: #9ca3af;
+    /* Light gray text */
+    border-top: 1px solid #374151;
+    padding: 4rem 2rem 2rem;
+    margin-top: auto;
+    width: 100%;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+}
+
+.footer-section h4 {
+    color: #f3f4f6;
+    /* White text for headings */
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+}
+
+.footer-tagline {
+    color: #9ca3af;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.6;
+    max-width: 300px;
+}
+
+.social-links {
+    display: flex;
+    gap: 1rem;
+}
+
+.social-links a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #1f2937;
+    color: #9ca3af;
+    border: 1px solid #374151;
+    transition: all 0.3s ease;
+}
+
+.social-links a:hover {
+    background-color: var(--primary);
+    color: white;
+    transform: translateY(-3px);
+    border-color: var(--primary);
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+}
+
+.footer-section ul li {
+    margin-bottom: 0.8rem;
+}
+
+.footer-section ul li a {
+    color: #9ca3af;
+    text-decoration: none;
+    transition: color 0.3s ease;
+    display: inline-block;
+}
+
+.footer-section ul li a:hover {
+    color: var(--primary);
+    transform: translateX(5px);
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-top: 2rem;
+    border-top: 1px solid #374151;
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+/* Responsive Footer */
+@media (max-width: 768px) {
+    .site-footer {
+        padding: 3rem 1.5rem 1.5rem;
+    }
+
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 2.5rem;
+        text-align: center;
+    }
+
+    .footer-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-tagline {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .social-links {
+        justify-content: center;
+    }
 }
