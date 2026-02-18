@@ -108,3 +108,22 @@ class CourseProgress(db.Model):
 
     def __repr__(self):
         return f'<CourseProgress {self.user_id} - {self.course_language}>'
+
+
+# =============================
+# Error Log Model
+# =============================
+class ErrorLog(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    level = db.Column(db.String(20), default='ERROR')
+    endpoint = db.Column(db.String(100))
+    method = db.Column(db.String(20))
+    message = db.Column(db.Text)
+    stack_trace = db.Column(db.Text)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=True)
+
+    user = db.relationship('User', backref='error_logs')
+
+    def __repr__(self):
+        return f'<ErrorLog {self.id} - {self.timestamp}>'

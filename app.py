@@ -2,7 +2,7 @@ from flask import render_template, redirect, url_for, flash, request, jsonify, a
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from chatbot import Chatbot
 from functools import wraps
-from models import app, db, User, CourseProgress, Course, Chapter
+from models import app, db, User, CourseProgress, Course, Chapter, ErrorLog
 import json
 from pathlib import Path
 from forms import SignupForm, LoginForm
@@ -358,16 +358,86 @@ def get_course_details():
 # Optional: Add a route to get list of available languages
 @app.route('/get_available_languages', methods=['GET'])
 def get_available_languages():
-    try:
-        courses = Course.query.with_entities(Course.language).all()
-        languages = [c.language for c in courses]
-        return jsonify({
-            'languages': languages
-        })
-    except Exception as e:
         return jsonify({
             'error': str(e)
         }), 500
+
+
+# =============================
+# Error Handling & Admin Logging
+# =============================
+
+@app.errorhandler(404)
+def page_not_found(e):
+    # Log 404s if needed, or just return template
+    return render_template('404.html'), 404
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    # Pass through HTTP errors
+    if isinstance(e,  Exception) and hasattr(e, 'code'):
+         return e
+
+    # Log the error to the database
+    try:
+        error_log = ErrorLog(
+            level='ERROR',
+            endpoint=request.endpoint,
+            method=request.method,
+            message=str(e),
+            stack_trace=format_exc(),
+            user_id=current_user.id if current_user.is_authenticated else None
+        )
+        db.session.add(error_log)
+        db.session.commit()
+    except Exception as log_error:
+        # Fallback if DB logging fails
+        logger.error(f"Failed to log error to DB: {log_error}")
+        logger.error(format_exc())
+
+    logger.error(f"Unhandled Exception: {e}")
+    logger.error(format_exc())
+    
+    # Return user-friendly error page
+    return render_template('500.html'), 500
+
+
+@app.route('/admin/errors')
+@login_required
+@admin_required
+def admin_errors():
+    page = request.args.get('page', 1, type=int)
+    errors = ErrorLog.query.order_by(ErrorLog.timestamp.desc()).paginate(page=page, per_page=20)
+    return render_template('admin_errors.html', errors=errors)
+
+
+@app.route('/admin/errors/delete/<int:log_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_error_log(log_id):
+    try:
+        log = db.session.get(ErrorLog, log_id)
+        if log:
+            db.session.delete(log)
+            db.session.commit()
+            return jsonify({'success': True})
+        return jsonify({'error': 'Log not found'}), 404
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/admin/errors/clear', methods=['POST'])
+@login_required
+@admin_required
+def clear_error_logs():
+    try:
+        db.session.query(ErrorLog).delete()
+        db.session.commit()
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
 
 
 @app.route('/api/get_user_courses')

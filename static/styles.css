@@ -1456,6 +1456,22 @@ button:hover {
     transform: translateY(-2px);
 }
 
+.custom-alert-btn.btn-secondary {
+    background: #e5e7eb;
+    color: #374151;
+    margin-right: 1rem;
+}
+
+.custom-alert-btn.btn-secondary:hover {
+    background: #d1d5db;
+}
+
+.custom-alert-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
 /* Alert Types */
 .alert-success .custom-alert-icon {
     color: #10b981;

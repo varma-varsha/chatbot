@@ -1,0 +1,187 @@
+{% extends "admin_base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">System Error Logs</h1>
+            <p class="text-sm text-gray-500 mt-1">Review and manage application exceptions.</p>
+        </div>
+        <button onclick="clearAllErrors()"
+            class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center shadow-sm">
+            <i class="fas fa-trash-alt mr-2"></i> Clear All Logs
+        </button>
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Time
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Details
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Message
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-gray-200">
+                    {% for error in errors.items %}
+                    <tr class="hover:bg-gray-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {{ error.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm">
+                                <span class="font-medium text-gray-900 block mb-1">
+                                    <span
+                                        class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                                        {{ error.method }}
+                                    </span>
+                                    <span class="ml-2 text-gray-600 font-mono text-xs">{{ error.endpoint }}</span>
+                                </span>
+                                <div class="text-xs text-gray-500">
+                                    User ID: {{ error.user_id if error.user_id else 'Anonymous' }}
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <div class="text-sm text-red-600 font-medium cursor-pointer hover:underline"
+                                onclick="toggleTrace('trace-{{ error.id }}')">
+                                {{ error.message[:100] }}{% if error.message|length > 100 %}...{% endif %}
+                            </div>
+                            <div id="trace-{{ error.id }}"
+                                class="hidden mt-2 p-3 bg-gray-50 rounded border border-gray-200 text-xs font-mono text-gray-700 overflow-x-auto whitespace-pre-wrap max-h-60">
+                                {{ error.stack_trace }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button onclick="deleteError('{{ error.id }}')"
+                                class="text-gray-400 hover:text-red-600 transition-colors" title="Delete Log">
+                                <i class="fas fa-times-circle text-lg"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="4" class="px-6 py-10 text-center text-gray-500">
+                            <div class="flex flex-col items-center justify-center">
+                                <i class="fas fa-check-circle text-4xl mb-3 text-green-500"></i>
+                                <p class="text-lg font-medium">No system errors found</p>
+                                <p class="text-sm mt-1">Everything is running smoothly!</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination -->
+        {% if errors.pages > 1 %}
+        <div class="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
+            <div class="flex items-center justify-between">
+                <div class="flex-1 flex justify-between sm:hidden">
+                    {% if errors.has_prev %}
+                    <a href="{{ url_for('admin_errors', page=errors.prev_num) }}"
+                        class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Previous
+                    </a>
+                    {% endif %}
+                    {% if errors.has_next %}
+                    <a href="{{ url_for('admin_errors', page=errors.next_num) }}"
+                        class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+                        Next
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-end">
+                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
+                        {% for page_num in errors.iter_pages(left_edge=1, right_edge=1, left_current=2, right_current=2)
+                        %}
+                        {% if page_num %}
+                        <a href="{{ url_for('admin_errors', page=page_num) }}"
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium {% if page_num == errors.page %}text-blue-600 bg-blue-50 z-10{% else %}text-gray-500 hover:bg-gray-50{% endif %}">
+                            {{ page_num }}
+                        </a>
+                        {% else %}
+                        <span
+                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">...</span>
+                        {% endif %}
+                        {% endfor %}
+                    </nav>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function toggleTrace(id) {
+        const el = document.getElementById(id);
+        el.classList.toggle('hidden');
+    }
+
+    async function deleteError(id) {
+        if (!confirm('Are you sure you want to delete this log?')) return;
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const response = await fetch(`/admin/errors/delete/${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                showCustomAlert('Log deleted successfully', 'success');
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                showCustomAlert('Error: ' + result.error, 'error');
+            }
+        } catch (e) {
+            showCustomAlert('Network error', 'error');
+        }
+    }
+
+    async function clearAllErrors() {
+        if (!confirm('Are you sure you want to delete ALL logs? This cannot be undone.')) return;
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const response = await fetch(`/admin/errors/clear`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                }
+            });
+
+            const result = await response.json();
+            if (result.success) {
+                showCustomAlert('All logs cleared successfully', 'success');
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                showCustomAlert('Error: ' + result.error, 'error');
+            }
+        } catch (e) {
+            showCustomAlert('Network error', 'error');
+        }
+    }
+</script>
+{% endblock %}

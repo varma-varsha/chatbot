@@ -84,6 +84,7 @@
         </div>
 
         <script>
+            // --- Custom Alert Logic ---
             function showCustomAlert(message, type = 'info', title = null) {
                 const overlay = document.getElementById('custom-alert-overlay');
                 const box = overlay.querySelector('.custom-alert-box');
@@ -119,6 +120,8 @@
                 }
 
                 icon.className = iconClass;
+                // Remove old classes
+                box.classList.remove('alert-info', 'alert-success', 'alert-error', 'alert-warning');
                 box.classList.add(boxClass);
                 titleEl.textContent = title || defaultTitle;
 
@@ -130,8 +133,64 @@
                 document.getElementById('custom-alert-overlay').classList.remove('active');
             }
 
+            // --- Custom Confirm Logic ---
+            let confirmCallback = null;
+
+            function showCustomConfirm(message, callback) {
+                // Build overlay if not exists (lazy load/inject) or use existing if structure supports
+                // For simplicity, let's assume we reuse the alert overlay or create a new one.
+                // Let's create a dedicated one to avoid state conflicts.
+
+                let overlay = document.getElementById('custom-confirm-overlay');
+                if (!overlay) {
+                    const markup = `
+                    <div id="custom-confirm-overlay" style="
+                        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                        background: rgba(0, 0, 0, 0.5); backdrop-filter: blur(4px);
+                        z-index: 10000; display: flex; justify-content: center; align-items: center;
+                        opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+                    ">
+                        <div class="custom-alert-box">
+                            <div class="custom-alert-icon"><i class="fas fa-question-circle" style="color: #6366f1;"></i></div>
+                            <h3 class="custom-alert-title">Confirm Action</h3>
+                            <p class="custom-alert-message">${message}</p>
+                            <div class="custom-alert-actions">
+                                <button class="custom-alert-btn btn-secondary" onclick="closeCustomConfirm(false)">Cancel</button>
+                                <button class="custom-alert-btn" onclick="closeCustomConfirm(true)">Yes, Proceed</button>
+                            </div>
+                        </div>
+                    </div>`;
+                    document.body.insertAdjacentHTML('beforeend', markup);
+                    overlay = document.getElementById('custom-confirm-overlay');
+                } else {
+                    overlay.querySelector('.custom-alert-message').textContent = message;
+                }
+
+                confirmCallback = callback;
+
+                // Show
+                setTimeout(() => {
+                    overlay.style.visibility = 'visible';
+                    overlay.style.opacity = '1';
+                    overlay.querySelector('.custom-alert-box').style.transform = 'scale(1)';
+                }, 10);
+            }
+
+            function closeCustomConfirm(result) {
+                const overlay = document.getElementById('custom-confirm-overlay');
+                overlay.style.opacity = '0';
+                overlay.style.visibility = 'hidden';
+                overlay.querySelector('.custom-alert-box').style.transform = 'scale(0.9)';
+
+                if (result && confirmCallback) {
+                    confirmCallback();
+                }
+                confirmCallback = null;
+            }
+
             // Expose globally
             window.showCustomAlert = showCustomAlert;
+            window.showCustomConfirm = showCustomConfirm;
         </script>
 
     </div>
