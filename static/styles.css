@@ -274,15 +274,66 @@ p {
 /* Call-to-Action Updates */
 .cta {
     text-align: center;
-    padding: 4rem 2rem;
-    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    padding: 5rem 2rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
     color: white;
-    border-radius: 8px;
+    border-radius: 24px;
+    margin-top: 4rem;
+    box-shadow: 0 20px 25px -5px rgba(99, 102, 241, 0.4), 0 10px 10px -5px rgba(99, 102, 241, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a subtle shine effect overlay */
+.cta::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.1), transparent);
+    transform: skewX(-20deg);
+    animation: shine 8s infinite linear;
+    pointer-events: none;
+}
+
+@keyframes shine {
+    0% {
+        left: -50%;
+    }
+
+    100% {
+        left: 150%;
+    }
 }
 
 .cta h2 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     color: white;
-    margin-bottom: 1.5rem;
+}
+
+.cta .btn-primary {
+    background-color: white;
+    color: var(--primary);
+    font-size: 1.1rem;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    font-weight: 700;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    border: 2px solid white;
+    /* Ensure border doesn't shift layout */
+}
+
+.cta .btn-primary:hover {
+    background-color: #f8fafc;
+    color: var(--primary-dark);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
 
 /* Responsive Adjustments */
@@ -1766,7 +1817,10 @@ a {
     max-width: 1200px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    /* Changed to 2 equal columns */
+    justify-items: center;
+    /* Center content within columns */
     gap: 3rem;
     margin-bottom: 3rem;
 }
