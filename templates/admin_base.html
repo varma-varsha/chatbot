@@ -47,6 +47,12 @@
                     <span>Add Course</span>
                 </a>
 
+                <a href="{{ url_for('manage_courses') }}"
+                    class="flex items-center px-4 py-3 rounded-lg {% if request.endpoint == 'manage_courses' %}bg-blue-50 text-blue-700 font-medium{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} transition-colors">
+                    <i class="fas fa-book w-6"></i>
+                    <span>Manage Courses</span>
+                </a>
+
                 <a href="{{ url_for('admin_users') }}"
                     class="flex items-center px-4 py-3 rounded-lg {% if request.endpoint == 'admin_users' %}bg-blue-50 text-blue-700 font-medium{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %} transition-colors">
                     <i class="fas fa-users w-6"></i>

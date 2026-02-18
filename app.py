@@ -196,6 +196,76 @@ def add_course():
     return render_template('add_course.html')
 
 
+@app.route('/admin/manage_courses')
+@login_required
+@admin_required
+def manage_courses():
+    courses = Course.query.all()
+    return render_template('manage_courses.html', courses=courses)
+
+
+@app.route('/admin/edit_course/<int:course_id>', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def edit_course(course_id):
+    course = db.session.get(Course, course_id)
+    if not course:
+        flash('Course not found.', 'danger')
+        return redirect(url_for('manage_courses'))
+
+    if request.method == 'POST':
+        try:
+            data = request.json
+            
+            # Update course details
+            course.language = data['language']
+            course.description = data['description']
+            
+            # Update chapters: Simple strategy - delete all and recreate
+            # This is safer to ensure order and content match exactly what user sees
+            Chapter.query.filter_by(course_id=course.id).delete()
+            
+            for i, chapter_data in enumerate(data['chapters']):
+                chapter = Chapter(
+                    course_id=course.id,
+                    title=chapter_data['title'],
+                    description=chapter_data['description'],
+                    sample_code=chapter_data.get('sampleCode', ''),
+                    order=i + 1
+                )
+                db.session.add(chapter)
+            
+            db.session.commit()
+            return jsonify({'success': True})
+        except Exception as e:
+            db.session.rollback()
+            return jsonify({'error': str(e)}), 500
+
+    return render_template('edit_course.html', course=course)
+
+
+@app.route('/admin/delete_course/<int:course_id>', methods=['POST'])
+@login_required
+@admin_required
+def delete_course(course_id):
+    try:
+        course = db.session.get(Course, course_id)
+        if not course:
+            return jsonify({'error': 'Course not found'}), 404
+            
+        # Delete associated chapters first (though cascade might handle it, better explicit)
+        Chapter.query.filter_by(course_id=course.id).delete()
+        
+        # Delete course
+        db.session.delete(course)
+        db.session.commit()
+        
+        return jsonify({'success': True})
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
 @app.route('/admin/users')
 @login_required
 @admin_required
