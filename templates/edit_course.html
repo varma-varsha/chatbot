@@ -169,13 +169,15 @@
             const result = await response.json();
 
             if (result.success) {
-                alert('Course updated successfully!');
-                window.location.href = '{{ url_for("manage_courses") }}';
+                showCustomAlert('Course updated successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = '{{ url_for("manage_courses") }}';
+                }, 1500);
             } else {
-                alert('Error updating course: ' + (result.error || 'Unknown error'));
+                showCustomAlert('Error updating course: ' + (result.error || 'Unknown error'), 'error');
             }
         } catch (error) {
-            alert('Network error: ' + error.message);
+            showCustomAlert('Network error: ' + error.message, 'error');
         }
     });
 </script>

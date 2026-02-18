@@ -182,7 +182,7 @@
             })
             .catch(error => {
                 console.error('Error details:', error);
-                alert(`Failed to download course material: ${error.message}`);
+                showCustomAlert(`Failed to download course material: ${error.message}`, 'error');
             })
             .finally(() => {
                 // Reset button state

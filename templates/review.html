@@ -276,18 +276,18 @@
 
         } catch (error) {
             console.error('Error loading course details:', error);
-            alert('Failed to load course details. Please try again.');
+            showCustomAlert('Failed to load course details. Please try again.', 'error');
         }
     }
 
     function markAsReviewed() {
         if (!currentCourseLanguage) {
-            alert('No course selected');
+            showCustomAlert('No course selected', 'warning');
             return;
         }
 
         // Update the last reviewed time
-        alert(`Great job! Your progress in ${currentCourseLanguage} has been updated.`);
+        showCustomAlert(`Great job! Your progress in ${currentCourseLanguage} has been updated.`, 'success');
         closePopup();
 
         // Reload the review data to update the display

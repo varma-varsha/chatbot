@@ -268,7 +268,7 @@
 
         } catch (error) {
             console.error('Error loading course details:', error);
-            alert('Failed to load course details. Please try again.');
+            showCustomAlert('Failed to load course details. Please try again.', 'error');
         }
     }
 
@@ -341,7 +341,7 @@
 
         } catch (error) {
             console.error('Error submitting chapter:', error);
-            alert(`Error: ${error.message}`);
+            showCustomAlert(`Error: ${error.message}`, 'error');
 
             // Reset button
             const submitButton = document.querySelector(`[data-chapter="${chapterNumber}"] .submit-btn`);
@@ -374,7 +374,7 @@
         } else {
             // Course Completed?
             if (chapterNumber >= document.querySelectorAll('.chapter-item').length) {
-                alert('Congratulations! You have reached the end of the course.');
+                showCustomAlert('Congratulations! You have reached the end of the course.', 'success');
             }
         }
     }
@@ -402,7 +402,7 @@
                 window.URL.revokeObjectURL(url);
                 document.body.removeChild(a);
             })
-            .catch(error => alert(error.message))
+            .catch(error => showCustomAlert(error.message, 'error'))
             .finally(() => {
                 downloadBtn.disabled = false;
                 downloadBtn.textContent = originalText;

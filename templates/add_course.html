@@ -130,13 +130,15 @@
             const result = await response.json();
 
             if (result.success) {
-                alert('Course created successfully!');
-                window.location.href = '{{ url_for("admin_dashboard") }}';
+                showCustomAlert('Course created successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = '{{ url_for("admin_dashboard") }}';
+                }, 1500);
             } else {
-                alert('Error creating course: ' + (result.error || 'Unknown error'));
+                showCustomAlert('Error creating course: ' + (result.error || 'Unknown error'), 'error');
             }
         } catch (error) {
-            alert('Network error: ' + error.message);
+            showCustomAlert('Network error: ' + error.message, 'error');
         }
     });
 

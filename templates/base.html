@@ -71,6 +71,69 @@
             {% block content %}{% endblock %}
         </main>
 
+        <!-- Custom Alert Modal -->
+        <div id="custom-alert-overlay">
+            <div class="custom-alert-box">
+                <div class="custom-alert-icon">
+                    <i class="fas fa-info-circle"></i>
+                </div>
+                <h3 class="custom-alert-title">Alert</h3>
+                <p class="custom-alert-message">Message goes here.</p>
+                <button class="custom-alert-btn" onclick="closeCustomAlert()">OK</button>
+            </div>
+        </div>
+
+        <script>
+            function showCustomAlert(message, type = 'info', title = null) {
+                const overlay = document.getElementById('custom-alert-overlay');
+                const box = overlay.querySelector('.custom-alert-box');
+                const icon = box.querySelector('.custom-alert-icon i');
+                const titleEl = box.querySelector('.custom-alert-title');
+                const msgEl = box.querySelector('.custom-alert-message');
+                const btn = box.querySelector('.custom-alert-btn');
+
+                // Reset classes
+                box.className = 'custom-alert-box';
+                icon.className = '';
+
+                // Set content
+                msgEl.textContent = message;
+
+                // Define styles based on type
+                let iconClass = 'fas fa-info-circle';
+                let boxClass = 'alert-info';
+                let defaultTitle = 'Info';
+
+                if (type === 'success') {
+                    iconClass = 'fas fa-check-circle';
+                    boxClass = 'alert-success';
+                    defaultTitle = 'Success!';
+                } else if (type === 'error') {
+                    iconClass = 'fas fa-times-circle';
+                    boxClass = 'alert-error';
+                    defaultTitle = 'Error';
+                } else if (type === 'warning') {
+                    iconClass = 'fas fa-exclamation-triangle';
+                    boxClass = 'alert-warning';
+                    defaultTitle = 'Warning';
+                }
+
+                icon.className = iconClass;
+                box.classList.add(boxClass);
+                titleEl.textContent = title || defaultTitle;
+
+                // Show
+                overlay.classList.add('active');
+            }
+
+            function closeCustomAlert() {
+                document.getElementById('custom-alert-overlay').classList.remove('active');
+            }
+
+            // Expose globally
+            window.showCustomAlert = showCustomAlert;
+        </script>
+
     </div>
 
     {% if request.path != '/dashboard' %}

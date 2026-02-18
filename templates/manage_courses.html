@@ -145,14 +145,13 @@
             const result = await response.json();
 
             if (result.success) {
-                // Determine if we are on a mobile device to decide the redirect or reload strategy
                 // For simplicity, just reload or redirect to manage_courses
                 window.location.reload();
             } else {
-                alert('Error deleting course: ' + (result.error || 'Unknown error'));
+                showCustomAlert('Error deleting course: ' + (result.error || 'Unknown error'), 'error');
             }
         } catch (error) {
-            alert('Network error: ' + error.message);
+            showCustomAlert('Network error: ' + error.message, 'error');
         } finally {
             closeDeleteModal();
         }
