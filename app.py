@@ -355,12 +355,15 @@ def get_course_details():
             'error': str(e)
         }), 500
 
-# Optional: Add a route to get list of available languages
+# Route to get list of available languages/courses from database
 @app.route('/get_available_languages', methods=['GET'])
 def get_available_languages():
-        return jsonify({
-            'error': str(e)
-        }), 500
+    try:
+        courses = Course.query.all()
+        languages = [course.language for course in courses]
+        return jsonify({'languages': languages})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 
 
 # =============================

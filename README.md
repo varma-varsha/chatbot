@@ -75,19 +75,6 @@ The application will be available at: **http://localhost:5000** or **http://127.
 ## Project Structure
 
 ```
-OneLearn/
-├── app.py                  # Main Flask application
-├── models.py               # Database models
-├── chatbot.py              # AI chatbot logic
-├── forms.py                # WTForms for user registration/login
-├── code_highlighter.py     # Code syntax highlighting
-├── requirements.txt        # Python dependencies
-├── knowledge_base.json     # Chatbot knowledge base
-├── courses.json            # Course content
-├── templates/              # HTML templates
-├── static/                 # CSS, JS, images
-└── instance/               # Database files (created automatically)
-```
 
 ## Technologies Used
 

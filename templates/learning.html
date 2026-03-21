@@ -88,39 +88,63 @@
 <script>
     // Load available courses
     async function loadCourses() {
+        const coursesGrid = document.getElementById('courses-grid');
+        coursesGrid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: #7f8c8d;"><div style="font-size: 2rem;">⏳</div><p>Loading courses...</p></div>`;
         try {
             const response = await fetch('/get_available_languages');
+            if (!response.ok) throw new Error('Failed to fetch courses');
             const data = await response.json();
-            const courses = data.languages || [];
+            const languages = data.languages || [];
 
-            const coursesGrid = document.getElementById('courses-grid');
-
-            if (courses.length === 0) {
+            if (languages.length === 0) {
                 coursesGrid.innerHTML = `
                 <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #7f8c8d;">
                     <div style="font-size: 4rem; margin-bottom: 20px;">📚</div>
                     <h3 style="margin-bottom: 10px;">No courses available</h3>
                     <p>Courses are being added soon!</p>
-                </div>
-            `;
+                </div>`;
                 return;
             }
 
-            coursesGrid.innerHTML = courses.map(lang => `
-            <div class="course-card" onclick="startCourse('${lang}')">
-                <div style="font-size: 4rem; text-align: center; margin-bottom: 20px;">${getLanguageIcon(lang)}</div>
-                <h3 style="text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 1.5rem;">${lang}</h3>
-                <p style="text-align: center; color: #7f8c8d; margin-bottom: 20px;">Start your ${lang} journey</p>
-                <div style="text-align: center;">
-                    <span style="display: inline-block; padding: 10px 25px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50px; font-weight: bold;">
-                        Start Learning →
-                    </span>
-                </div>
-            </div>
-        `).join('');
+            // Fetch full details for each course to show description & chapter count
+            const courseDetails = await Promise.all(
+                languages.map(lang =>
+                    fetch(`/get_course_details?language=${encodeURIComponent(lang)}`)
+                        .then(r => r.json())
+                        .catch(() => ({ language: lang, description: '', chapters: [] }))
+                )
+            );
+
+            coursesGrid.innerHTML = courseDetails.map(course => {
+                const lang = course.language;
+                const chapterCount = (course.chapters || []).length;
+                const desc = course.description
+                    ? (course.description.length > 100 ? course.description.substring(0, 100) + '...' : course.description)
+                    : `Start your ${lang} journey`;
+                return `
+                <div class="course-card" onclick="startCourse('${lang}')" style="cursor:pointer; display:flex; flex-direction:column; justify-content:space-between;">
+                    <div>
+                        <div style="font-size: 3.5rem; text-align: center; margin-bottom: 15px;">${getLanguageIcon(lang)}</div>
+                        <h3 style="text-align: center; color: #2c3e50; margin-bottom: 10px; font-size: 1.4rem;">${lang}</h3>
+                        <p style="text-align: center; color: #7f8c8d; margin-bottom: 12px; font-size: 0.92rem; line-height: 1.5;">${desc}</p>
+                        ${chapterCount > 0 ? `<p style="text-align:center; color:#667eea; font-size:0.85rem; font-weight:600; margin-bottom:15px;">📖 ${chapterCount} Chapter${chapterCount !== 1 ? 's' : ''}</p>` : ''}
+                    </div>
+                    <div style="text-align: center; margin-top: 10px;">
+                        <span style="display: inline-block; padding: 10px 28px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 50px; font-weight: bold; font-size: 0.95rem; transition: opacity 0.2s;">
+                            Start Learning →
+                        </span>
+                    </div>
+                </div>`;
+            }).join('');
 
         } catch (error) {
             console.error('Error loading courses:', error);
+            coursesGrid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 60px 20px; color: #e74c3c;">
+                <div style="font-size: 3rem; margin-bottom: 15px;">⚠️</div>
+                <h3>Failed to load courses</h3>
+                <p style="color:#7f8c8d;">Please refresh the page and try again.</p>
+            </div>`;
         }
     }
 
